@@ -14,9 +14,9 @@ Implement a custom `io.Reader` that counts how many bytes it has read, learning 
 
 ## Tour Reference — Read These First
 
-1. [Readers](http://127.0.0.1:3999/tour/methods/21) — The `io.Reader` interface and how `Read` works
-2. [Exercise: Readers](http://127.0.0.1:3999/tour/methods/22) — Implementing a Reader that emits data
-3. [Exercise: rot13Reader](http://127.0.0.1:3999/tour/methods/23) — Wrapping a Reader to transform data
+1. [Readers](https://go.dev/tour/methods/21) — The `io.Reader` interface and how `Read` works
+2. [Exercise: Readers](https://go.dev/tour/methods/22) — Implementing a Reader that emits data
+3. [Exercise: rot13Reader](https://go.dev/tour/methods/23) — Wrapping a Reader to transform data
 
 ## What to Build
 

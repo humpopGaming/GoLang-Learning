@@ -14,11 +14,11 @@ Build a simple currency exchange calculator to practise variables, variable decl
 
 ## Tour Reference — Read These First
 
-1. [Variables](http://127.0.0.1:3999/tour/basics/8) — `var` declares variables; type comes last
-2. [Variables with initializers](http://127.0.0.1:3999/tour/basics/9) — With an initializer, the type can be omitted
-3. [Short variable declarations](http://127.0.0.1:3999/tour/basics/10) — `:=` for implicit-type declaration inside functions
-4. [Constants](http://127.0.0.1:3999/tour/basics/15) — `const` keyword; cannot use `:=`
-5. [Numeric constants](http://127.0.0.1:3999/tour/basics/16) — High-precision values that take the type their context needs
+1. [Variables](https://go.dev/tour/basics/8) — `var` declares variables; type comes last
+2. [Variables with initializers](https://go.dev/tour/basics/9) — With an initializer, the type can be omitted
+3. [Short variable declarations](https://go.dev/tour/basics/10) — `:=` for implicit-type declaration inside functions
+4. [Constants](https://go.dev/tour/basics/15) — `const` keyword; cannot use `:=`
+5. [Numeric constants](https://go.dev/tour/basics/16) — High-precision values that take the type their context needs
 
 ## What to Build
 

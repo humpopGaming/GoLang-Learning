@@ -13,8 +13,8 @@ Build a countdown program that demonstrates `defer` and stacking defers — show
 
 ## Tour Reference — Read These First
 
-1. [Defer](http://127.0.0.1:3999/tour/flowcontrol/12) — A defer statement defers execution until the surrounding function returns
-2. [Stacking defers](http://127.0.0.1:3999/tour/flowcontrol/13) — Deferred calls are pushed onto a stack (LIFO)
+1. [Defer](https://go.dev/tour/flowcontrol/12) — A defer statement defers execution until the surrounding function returns
+2. [Stacking defers](https://go.dev/tour/flowcontrol/13) — Deferred calls are pushed onto a stack (LIFO)
 
 ## What to Build
 

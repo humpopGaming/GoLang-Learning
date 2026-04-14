@@ -14,10 +14,10 @@ Build a small program that creates and manipulates contact cards using structs �
 
 ## Tour Reference — Read These First
 
-1. [Structs](http://127.0.0.1:3999/tour/moretypes/2) — A struct is a collection of fields
-2. [Struct fields](http://127.0.0.1:3999/tour/moretypes/3) — Accessed using a dot
-3. [Pointers to structs](http://127.0.0.1:3999/tour/moretypes/4) — `p.X` instead of `(*p).X`
-4. [Struct literals](http://127.0.0.1:3999/tour/moretypes/5) — Create by listing field values, or by `Name: value` syntax
+1. [Structs](https://go.dev/tour/moretypes/2) — A struct is a collection of fields
+2. [Struct fields](https://go.dev/tour/moretypes/3) — Accessed using a dot
+3. [Pointers to structs](https://go.dev/tour/moretypes/4) — `p.X` instead of `(*p).X`
+4. [Struct literals](https://go.dev/tour/moretypes/5) — Create by listing field values, or by `Name: value` syntax
 
 ## What to Build
 

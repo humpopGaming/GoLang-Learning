@@ -13,7 +13,7 @@ Build a scoreboard that multiple goroutines update concurrently, using `sync.Mut
 
 ## Tour Reference — Read These First
 
-1. [sync.Mutex](http://127.0.0.1:3999/tour/concurrency/9) — Mutual exclusion for safe concurrent access to shared data
+1. [sync.Mutex](https://go.dev/tour/concurrency/9) — Mutual exclusion for safe concurrent access to shared data
 
 ## What to Build
 

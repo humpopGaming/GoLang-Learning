@@ -14,9 +14,9 @@ Write your first Go program that imports packages, calls functions from the stan
 
 ## Tour Reference — Read These First
 
-1. [Packages](http://127.0.0.1:3999/tour/basics/1) — Programs are made of packages; `main` is the entry point
-2. [Imports](http://127.0.0.1:3999/tour/basics/2) — Use factored (parenthesized) import statements
-3. [Exported names](http://127.0.0.1:3999/tour/basics/3) — Capital letter = exported = accessible from outside the package
+1. [Packages](https://go.dev/tour/basics/1) — Programs are made of packages; `main` is the entry point
+2. [Imports](https://go.dev/tour/basics/2) — Use factored (parenthesized) import statements
+3. [Exported names](https://go.dev/tour/basics/3) — Capital letter = exported = accessible from outside the package
 
 ## What to Build
 

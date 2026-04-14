@@ -15,12 +15,12 @@ Build a phonebook using maps and explore function values and closures — two po
 
 ## Tour Reference — Read These First
 
-1. [Maps](http://127.0.0.1:3999/tour/moretypes/19) — `map[KeyType]ValueType`; use `make` to create
-2. [Map literals](http://127.0.0.1:3999/tour/moretypes/20) — Initialize a map inline with `map[K]V{ key: value, ... }`
-3. [Map literals continued](http://127.0.0.1:3999/tour/moretypes/21) — Type name can be omitted in literal elements
-4. [Mutating maps](http://127.0.0.1:3999/tour/moretypes/22) — Insert, update, delete, and check existence
-5. [Function values](http://127.0.0.1:3999/tour/moretypes/24) — Functions can be passed around like any other value
-6. [Function closures](http://127.0.0.1:3999/tour/moretypes/25) — A closure captures variables from its surrounding scope
+1. [Maps](https://go.dev/tour/moretypes/19) — `map[KeyType]ValueType`; use `make` to create
+2. [Map literals](https://go.dev/tour/moretypes/20) — Initialize a map inline with `map[K]V{ key: value, ... }`
+3. [Map literals continued](https://go.dev/tour/moretypes/21) — Type name can be omitted in literal elements
+4. [Mutating maps](https://go.dev/tour/moretypes/22) — Insert, update, delete, and check existence
+5. [Function values](https://go.dev/tour/moretypes/24) — Functions can be passed around like any other value
+6. [Function closures](https://go.dev/tour/moretypes/25) — A closure captures variables from its surrounding scope
 
 ## What to Build
 

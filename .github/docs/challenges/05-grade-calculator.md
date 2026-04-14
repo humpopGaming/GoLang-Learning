@@ -14,9 +14,9 @@ Build a grade calculator that converts a numeric score to a letter grade using `
 
 ## Tour Reference — Read These First
 
-1. [Switch](http://127.0.0.1:3999/tour/flowcontrol/9) — Go's switch; only runs the matching case (no fallthrough by default)
-2. [Switch evaluation order](http://127.0.0.1:3999/tour/flowcontrol/10) — Cases are evaluated top to bottom
-3. [Switch with no condition](http://127.0.0.1:3999/tour/flowcontrol/11) — `switch {}` is a clean way to write if/else chains
+1. [Switch](https://go.dev/tour/flowcontrol/9) — Go's switch; only runs the matching case (no fallthrough by default)
+2. [Switch evaluation order](https://go.dev/tour/flowcontrol/10) — Cases are evaluated top to bottom
+3. [Switch with no condition](https://go.dev/tour/flowcontrol/11) — `switch {}` is a clean way to write if/else chains
 
 ## What to Build
 

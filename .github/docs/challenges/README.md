@@ -1,6 +1,6 @@
 # Go Tour Interactive Challenges
 
-A series of 21 hands-on challenges that walk you through the [Tour of Go](http://127.0.0.1:3999/tour/list), building small runnable programs for each concept. These are designed to be **simpler than the Tour's own exercises** — the goal is to make you _use_ each concept so it sticks.
+A series of 21 hands-on challenges that walk you through the [Tour of Go](https://go.dev/tour/list), building small runnable programs for each concept. These are designed to be **simpler than the Tour's own exercises** — the goal is to make you _use_ each concept so it sticks.
 
 ## How to Use
 

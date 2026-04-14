@@ -14,8 +14,8 @@ Build a program that races multiple slow operations and picks the result from wh
 
 ## Tour Reference — Read These First
 
-1. [Select](http://127.0.0.1:3999/tour/concurrency/5) — Wait on multiple channels; first ready case wins
-2. [Default Selection](http://127.0.0.1:3999/tour/concurrency/6) — `default` makes a select non-blocking
+1. [Select](https://go.dev/tour/concurrency/5) — Wait on multiple channels; first ready case wins
+2. [Default Selection](https://go.dev/tour/concurrency/6) — `default` makes a select non-blocking
 
 ## What to Build
 

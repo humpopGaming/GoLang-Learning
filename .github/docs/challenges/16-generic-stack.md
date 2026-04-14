@@ -12,7 +12,7 @@ Implement a generic stack data structure that works with any type, practising ge
 
 ## Tour Reference — Read These First
 
-1. [Generic types](http://127.0.0.1:3999/tour/generics/2) — Types can be parameterized with type parameters
+1. [Generic types](https://go.dev/tour/generics/2) — Types can be parameterized with type parameters
 
 ## What to Build
 
