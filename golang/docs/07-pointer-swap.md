@@ -14,7 +14,7 @@ Write a program that swaps two variables using pointers, demonstrating how point
 
 ## Tour Reference — Read These First
 
-1. [Pointers](https://go.dev/tour/moretypes/1) — `*T` is a pointer to a `T` value; `&` creates a pointer; `*` dereferences it
+1. [Pointers](tour/moretypes/01-pointers.html) — `*T` is a pointer to a `T` value; `&` creates a pointer; `*` dereferences it
 
 ## What to Build
 

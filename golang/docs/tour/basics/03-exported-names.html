@@ -1,0 +1,130 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exported Names - Go Tour with C# Comparison</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <button class="menu-toggle">☰ Menu</button>
+    
+    <nav class="nav-sidebar">
+        <!-- Navigation will be populated by JavaScript -->
+    </nav>
+    
+    <main class="main-content">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span>/</span>
+            <a href="01-packages.html">Basics</a>
+            <span>/</span>
+            <span>Exported Names</span>
+        </div>
+        
+
+        <div class="content-header">
+            <h1>Exported Names</h1>
+            <div class="page-meta">
+                <span class="page-badge section">Basics</span>
+                <span class="page-badge page-number">Page 3 of 16</span>
+            </div>
+        </div>
+        
+        <div class="content-section go-section">
+<h2>Go Concept</h2>
+<p>In Go, a name is <strong>exported</strong> (visible outside its package) if it begins with a capital letter. Names starting with a lowercase letter are <strong>unexported</strong> (private to the package).</p>
+<p>This capitalization rule applies to:</p>
+<ul>
+<li>Functions (<code>Println</code> is exported, <code>println</code> is not)</li>
+<li>Types (<code>Reader</code> is exported, <code>reader</code> is not)</li>
+<li>Struct fields (<code>Name</code> is exported, <code>name</code> is not)</li>
+<li>Constants and variables</li>
+</ul>
+<p>When importing a package, you can only refer to its exported names. Any unexported names are not accessible from outside the package.</p>
+<h3>Go Example</h3>
+<pre><code class="language-go">package main
+
+import (
+	&quot;fmt&quot;
+	&quot;math&quot;
+)
+
+func main() {
+	fmt.Println(math.Pi)  // Pi is exported (uppercase)
+	// fmt.Println(math.pi)  // ERROR: pi is unexported (lowercase)
+}</code></pre>
+</div>
+<div class="content-section csharp-section">
+<h2>C# Equivalent</h2>
+<p>C# uses <strong>access modifiers</strong> (<code>public</code>, <code>private</code>, <code>protected</code>, <code>internal</code>) to control visibility. This provides more granular control than Go's simple capitalization rule:</p>
+<ul>
+<li><code>public</code>: Accessible from anywhere (like Go's exported names)</li>
+<li><code>private</code>: Accessible only within the class/struct (similar to Go's unexported for methods)</li>
+<li><code>internal</code>: Accessible within the same assembly (no direct Go equivalent)</li>
+<li><code>protected</code>: Accessible within the class and derived classes</li>
+</ul>
+<p>C# requires explicit keywords, making visibility intentions more obvious but more verbose. Go's approach is simpler but less flexible.</p>
+<h3>C# Example</h3>
+<pre><code class="language-csharp">using System;
+
+namespace MathLibrary
+{
+    public class Constants
+    {
+        public const double Pi = 3.14159;      // Accessible from anywhere
+        private const double pi = 3.14159;     // Only within this class
+        internal const double E = 2.71828;     // Within this assembly
+    }
+}
+
+// Usage:
+class Program
+{
+    static void Main()
+    {
+        Console.WriteLine(Constants.Pi);    // OK: Pi is public
+        // Console.WriteLine(Constants.pi);  // ERROR: pi is private
+        Console.WriteLine(Constants.E);      // OK: E is internal (same assembly)
+    }
+}</code></pre>
+</div>
+<div class="content-section key-differences">
+<h2>Key Differences</h2>
+<ul>
+<li><strong>Visibility Mechanism</strong>: Go uses capitalization; C# uses explicit keywords</li>
+<li><strong>Granularity</strong>: C# has more access levels (public, private, protected, internal, protected internal); Go has only two (exported/unexported)</li>
+<li><strong>Package vs Assembly</strong>: Go's unexported is package-scoped; C# has both class-scoped (<code>private</code>) and assembly-scoped (<code>internal</code>)</li>
+<li><strong>Default Behavior</strong>: Go defaults to unexported (lowercase); C# defaults to <code>private</code> for members, <code>internal</code> for top-level types</li>
+<li><strong>Clarity vs Brevity</strong>: C# is more explicit and verbose; Go is more concise but relies on naming conventions</li>
+<li><strong>Use Case Alignment</strong>: Both control API surface area, but C# provides finer-grained control for complex scenarios like inheritance and assembly boundaries. Go's simpler model works well for its composition-based design.</li>
+</ul>
+</div>
+
+        
+        <div class="page-nav" id="pageNav">
+            <!-- Navigation buttons will be populated by JavaScript -->
+        </div>
+    </main>
+    
+    <script src="../assets/tour.js"></script>
+    <script>
+        // Add page navigation
+        const adjacent = getAdjacentPages();
+        const navContainer = document.getElementById('pageNav');
+        let navHtml = '';
+        
+        if (adjacent.prev) {
+            navHtml += '<a href="' + adjacent.prev.href + '" class="prev">' + adjacent.prev.title + '</a>';
+        } else {
+            navHtml += '<span></span>';
+        }
+        
+        if (adjacent.next) {
+            navHtml += '<a href="' + adjacent.next.href + '" class="next">' + adjacent.next.title + '</a>';
+        }
+        
+        navContainer.innerHTML = navHtml;
+    </script>
+</body>
+</html>

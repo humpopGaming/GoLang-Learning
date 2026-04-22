@@ -1,0 +1,154 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goroutines - Go Tour with C# Comparison</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <button class="menu-toggle">☰ Menu</button>
+    
+    <nav class="nav-sidebar">
+        <!-- Navigation will be populated by JavaScript -->
+    </nav>
+    
+    <main class="main-content">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span>/</span>
+            <a href="01-goroutines.html">Concurrency</a>
+            <span>/</span>
+            <span>Goroutines</span>
+        </div>
+        
+
+        <div class="content-header">
+            <h1>Goroutines</h1>
+            <div class="page-meta">
+                <span class="page-badge section">Concurrency</span>
+                <span class="page-badge page-number">Page 1 of 9</span>
+            </div>
+        </div>
+        
+        <div class="content-section go-section">
+<h2>Go Concept</h2>
+<p>A <strong>goroutine</strong> is a lightweight thread managed by the Go runtime. Goroutines enable concurrent execution of functions. To start a goroutine, use the <code>go</code> keyword before a function call.</p>
+<p>Goroutines are extremely cheap compared to OS threads:</p>
+<ul>
+<li>They start with a small stack (a few KB) that grows as needed</li>
+<li>Thousands or even millions of goroutines can run in a single program</li>
+<li>The Go runtime multiplexes goroutines onto a small number of OS threads</li>
+</ul>
+<p>Goroutines are part of Go's <strong>CSP (Communicating Sequential Processes)</strong> concurrency model, where concurrent processes communicate through channels rather than sharing memory.</p>
+<h3>Go Example</h3>
+<pre><code class="language-go">package main
+
+import (
+	&quot;fmt&quot;
+	&quot;time&quot;
+)
+
+func say(s string) {
+	for i := 0; i &lt; 5; i++ {
+		time.Sleep(100 * time.Millisecond)
+		fmt.Println(s)
+	}
+}
+
+func main() {
+	// Start a goroutine
+	go say(&quot;world&quot;)
+	
+	// Run in the main goroutine
+	say(&quot;hello&quot;)
+}</code></pre>
+</div>
+<div class="content-section csharp-section">
+<h2>C# Equivalent</h2>
+<p>C# uses <strong>Tasks and async/await</strong> for asynchronous and concurrent operations. C# also has <strong>Thread</strong> for lower-level thread management. However, the paradigms are fundamentally different:</p>
+<h3><strong>Paradigm Difference: CSP vs Async/Await</strong></h3>
+<p><strong>Go (CSP Model):</strong></p>
+<ul>
+<li>Goroutines are independent, concurrent execution units</li>
+<li>Communication happens through <strong>channels</strong> (explicit message passing)</li>
+<li>"Don't communicate by sharing memory; share memory by communicating"</li>
+<li>Functions don't need special syntax to be concurrent</li>
+<li>Blocking is cheap - goroutines are so lightweight you can block freely</li>
+</ul>
+<p><strong>C# (Async/Await Model):</strong></p>
+<ul>
+<li>Tasks represent asynchronous operations that will complete in the future</li>
+<li>Methods must be marked <code>async</code> to enable await</li>
+<li>Focus is on <strong>non-blocking I/O</strong> rather than parallelism</li>
+<li>Sharing memory with locks is the primary concurrency mechanism</li>
+<li>Blocking is expensive - should be avoided in async code</li>
+</ul>
+<h3>When Paradigms Align:</h3>
+<ul>
+<li>Starting background work: <code>go func()</code> � <code>Task.Run()</code></li>
+<li>I/O-bound operations: Go's blocking goroutines � C# async/await</li>
+<li>CPU-bound parallel work: goroutines � <code>Parallel.For</code> or <code>Task.WhenAll</code></li>
+</ul>
+<h3>When Paradigms Differ:</h3>
+<ul>
+<li>Go: Goroutines + channels for coordination</li>
+<li>C#: async/await for I/O, explicit locking for synchronization</li>
+</ul>
+<h3>C# Example</h3>
+<pre><code class="language-csharp">using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+class Program
+{
+    static void Say(string s)
+    {
+        for (int i = 0; i &lt; 5; i++)
+        {
+            Thread.Sleep(100);
+            Console.WriteLine(s);
+        }
+    }
+
+    static async Task Main()
+    {
+        // Start a background task (similar to goroutine)
+        var task = Task.Run(() =&gt; Say(&quot;world&quot;));
+        
+        // Run in the main thread
+        Say(&quot;hello&quot;);
+        
+        // Wait for the background task to complete
+        await task;
+    }
+}</code></pre>
+</div>
+
+        
+        <div class="page-nav" id="pageNav">
+            <!-- Navigation buttons will be populated by JavaScript -->
+        </div>
+    </main>
+    
+    <script src="../assets/tour.js"></script>
+    <script>
+        // Add page navigation
+        const adjacent = getAdjacentPages();
+        const navContainer = document.getElementById('pageNav');
+        let navHtml = '';
+        
+        if (adjacent.prev) {
+            navHtml += '<a href="' + adjacent.prev.href + '" class="prev">' + adjacent.prev.title + '</a>';
+        } else {
+            navHtml += '<span></span>';
+        }
+        
+        if (adjacent.next) {
+            navHtml += '<a href="' + adjacent.next.href + '" class="next">' + adjacent.next.title + '</a>';
+        }
+        
+        navContainer.innerHTML = navHtml;
+    </script>
+</body>
+</html>

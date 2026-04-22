@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arrays - Go Tour with C# Comparison</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <button class="menu-toggle">☰ Menu</button>
+    
+    <nav class="nav-sidebar">
+        <!-- Navigation will be populated by JavaScript -->
+    </nav>
+    
+    <main class="main-content">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span>/</span>
+            <a href="01-pointers.html">More Types</a>
+            <span>/</span>
+            <span>Arrays</span>
+        </div>
+        
+
+        <div class="content-header">
+            <h1>Arrays</h1>
+            <div class="page-meta">
+                <span class="page-badge section">More Types</span>
+                <span class="page-badge page-number">Page 6 of 25</span>
+            </div>
+        </div>
+        
+        <div class="content-section go-section">
+<h2>Go Concept</h2>
+<p>An array in Go has a <strong>fixed size</strong> that's part of its type. The type <code>[n]T</code> is an array of <code>n</code> values of type <code>T</code>.</p>
+<p>Arrays in Go are value types � they're copied when assigned. The size cannot change after declaration.</p>
+<h3>Go Example</h3>
+<pre><code class="language-go">package main
+
+import &quot;fmt&quot;
+
+func main() {
+	var a [2]string
+	a[0] = &quot;Hello&quot;
+	a[1] = &quot;World&quot;
+	fmt.Println(a[0], a[1])
+	fmt.Println(a)
+
+	primes := [6]int{2, 3, 5, 7, 11, 13}
+	fmt.Println(primes)
+}</code></pre>
+</div>
+<div class="content-section csharp-section">
+<h2>C# Equivalent</h2>
+<p>C# also has <strong>arrays</strong> with fixed size:</p>
+<ul>
+<li>Declaration: <code>int[] primes</code> or <code>int[6] primes</code></li>
+<li>Arrays are reference types (unlike Go where they're value types)</li>
+<li>Size is fixed after creation</li>
+<li>Zero-indexed like Go</li>
+</ul>
+<p>The key difference is that C# arrays are reference types (stored on heap), while Go arrays are value types (copied on assignment).</p>
+<h3>C# Example</h3>
+<pre><code class="language-csharp">using System;
+
+class Program
+{
+    static void Main()
+    {
+        string[] a = new string[2];
+        a[0] = &quot;Hello&quot;;
+        a[1] = &quot;World&quot;;
+        Console.WriteLine($&quot;{a[0]} {a[1]}&quot;);
+        Console.WriteLine($&quot;[{string.Join(&quot; &quot;, a)}]&quot;);
+
+        int[] primes = new int[] { 2, 3, 5, 7, 11, 13 };
+        // or: int[] primes = { 2, 3, 5, 7, 11, 13 };
+        Console.WriteLine($&quot;[{string.Join(&quot; &quot;, primes)}]&quot;);
+    }
+}</code></pre>
+</div>
+<div class="content-section key-differences">
+<h2>Key Differences</h2>
+<ul>
+<li><strong>Value vs Reference</strong>: Go arrays are value types (copied); C# arrays are reference types (referenced)</li>
+<li><strong>Type System</strong>: Go array type includes size <code>[6]int</code>; C# array type doesn't <code>int[]</code></li>
+<li><strong>Size in Type</strong>: In Go, <code>[5]int</code> and <code>[6]int</code> are different types; in C# both are <code>int[]</code></li>
+<li><strong>Heap vs Stack</strong>: Go arrays can be stack or heap allocated; C# arrays are always heap-allocated</li>
+<li><strong>Common Usage</strong>: Go developers prefer slices over arrays; C# developers use arrays or List<T></li>
+<li><strong>Use Case Alignment</strong>: Both provide fixed-size sequential collections. However, <strong>Go arrays are rarely used directly</strong> � Go developers use slices (covered next). C# arrays are more common, but <code>List&lt;T&gt;</code> is often preferred for dynamic collections.</li>
+</ul>
+<p><strong>Important note</strong>: In Go, you'll almost always use <strong>slices</strong> instead of arrays. Arrays are the underlying data structure, but slices provide a more flexible interface. This is different from C# where arrays are commonly used directly.</p>
+<pre><code class="language-go">// Go: Arrays rarely used directly
+var arr [5]int        // Array (value type, size in type)
+slice := arr[:]       // Slice (view of array, commonly used)</code></pre>
+<pre><code class="language-csharp">// C#: Arrays commonly used
+int[] arr = new int[5];  // Array (reference type)
+List&lt;int&gt; list = new List&lt;int&gt;();  // List for dynamic size</code></pre>
+</div>
+
+        
+        <div class="page-nav" id="pageNav">
+            <!-- Navigation buttons will be populated by JavaScript -->
+        </div>
+    </main>
+    
+    <script src="../assets/tour.js"></script>
+    <script>
+        // Add page navigation
+        const adjacent = getAdjacentPages();
+        const navContainer = document.getElementById('pageNav');
+        let navHtml = '';
+        
+        if (adjacent.prev) {
+            navHtml += '<a href="' + adjacent.prev.href + '" class="prev">' + adjacent.prev.title + '</a>';
+        } else {
+            navHtml += '<span></span>';
+        }
+        
+        if (adjacent.next) {
+            navHtml += '<a href="' + adjacent.next.href + '" class="next">' + adjacent.next.title + '</a>';
+        }
+        
+        navContainer.innerHTML = navHtml;
+    </script>
+</body>
+</html>

@@ -1,0 +1,270 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Readers - Go Tour with C# Comparison</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <button class="menu-toggle">☰ Menu</button>
+    
+    <nav class="nav-sidebar">
+        <!-- Navigation will be populated by JavaScript -->
+    </nav>
+    
+    <main class="main-content">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span>/</span>
+            <a href="01-methods.html">Methods</a>
+            <span>/</span>
+            <span>Readers</span>
+        </div>
+        
+
+        <div class="content-header">
+            <h1>Readers</h1>
+            <div class="page-meta">
+                <span class="page-badge section">Methods</span>
+                <span class="page-badge page-number">Page 21 of 23</span>
+            </div>
+        </div>
+        
+        <div class="content-section go-section">
+<h2>Go Concept</h2>
+<p>The <code>io</code> package specifies the <strong>io.Reader</strong> interface, which represents the read end of a stream of data. The Go standard library contains many implementations of this interface, including files, network connections, compressors, ciphers, and others.</p>
+<p>The <code>io.Reader</code> interface has a single method:</p>
+<pre><code class="language-go">func (T) Read(b []byte) (n int, err error)</code></pre>
+<p><code>Read</code> populates the given byte slice with data and returns the number of bytes populated and an error value. It returns an <code>io.EOF</code> error when the stream ends.</p>
+<p>The Reader interface is one of Go's most important interfaces, forming the basis for all I/O operations. Its simplicity enables powerful composition and allows any data source to be treated uniformly.</p>
+<h3>Go Example</h3>
+<pre><code class="language-go">package main
+
+import (
+	&quot;fmt&quot;
+	&quot;io&quot;
+	&quot;strings&quot;
+)
+
+func main() {
+	// strings.Reader implements io.Reader
+	r := strings.NewReader(&quot;Hello, Reader!&quot;)
+
+	// Read in small chunks
+	b := make([]byte, 8)
+	for {
+		n, err := r.Read(b)
+		fmt.Printf(&quot;n = %v err = %v b = %v\n&quot;, n, err, b)
+		fmt.Printf(&quot;b[:n] = %q\n&quot;, b[:n])
+		if err == io.EOF {
+			break
+		}
+	}
+}
+
+// Output:
+// n = 8 err = &lt;nil&gt; b = [72 101 108 108 111 44 32 82]
+// b[:n] = &quot;Hello, R&quot;
+// n = 6 err = &lt;nil&gt; b = [101 97 100 101 114 33 32 82]
+// b[:n] = &quot;eader!&quot;
+// n = 0 err = EOF b = [101 97 100 101 114 33 32 82]
+// b[:n] = &quot;&quot;
+
+// Custom Reader example
+type AlphabetReader struct {
+	current byte
+}
+
+func (a *AlphabetReader) Read(b []byte) (int, error) {
+	if a.current &gt;= 'z' {
+		return 0, io.EOF
+	}
+	
+	n := 0
+	for i := 0; i &lt; len(b) &amp;&amp; a.current &lt; 'z'; i++ {
+		a.current++
+		b[i] = a.current
+		n++
+	}
+	return n, nil
+}
+
+// Using helper functions
+func demonstrateReaderUtilities() {
+	r := strings.NewReader(&quot;Hello, World!&quot;)
+	
+	// io.ReadAll reads all data until EOF
+	data, err := io.ReadAll(r)
+	if err != nil {
+		fmt.Println(&quot;Error:&quot;, err)
+	}
+	fmt.Println(string(data)) // Hello, World!
+	
+	// io.Copy copies from reader to writer
+	r2 := strings.NewReader(&quot;Copy this&quot;)
+	written, err := io.Copy(io.Discard, r2)
+	fmt.Printf(&quot;Copied %d bytes\n&quot;, written)
+	
+	// io.LimitReader limits how much can be read
+	r3 := strings.NewReader(&quot;Limited reading&quot;)
+	limited := io.LimitReader(r3, 7)
+	data3, _ := io.ReadAll(limited)
+	fmt.Println(string(data3)) // &quot;Limited&quot;
+}</code></pre>
+</div>
+<div class="content-section csharp-section">
+<h2>C# Equivalent</h2>
+<p>C# provides the <strong>Stream</strong> abstract class and related types for I/O operations. The most similar interface to io.Reader is the abstract <code>Stream</code> class, though C# also has <code>IEnumerable&lt;byte&gt;</code> for sequence operations.</p>
+<p><strong>Key C# I/O types:</strong></p>
+<ul>
+<li><strong>Stream</strong>: Abstract base class for byte-oriented I/O (most similar to io.Reader)</li>
+<li><strong>StreamReader</strong>: Text-oriented reading with encoding support</li>
+<li><strong>IAsyncEnumerable<byte></strong>: Async sequence of bytes (modern C#)</li>
+</ul>
+<p>C# streams are more feature-rich than Go readers, supporting seeking, writing, and async operations in one abstraction. However, this makes them more complex and less composable than Go's focused Reader interface.</p>
+<h3>C# Example</h3>
+<pre><code class="language-csharp">using System;
+using System.IO;
+using System.Text;
+using System.Threading.Tasks;
+
+class Program
+{
+    static void Main()
+    {
+        // MemoryStream is similar to strings.Reader
+        byte[] data = Encoding.UTF8.GetBytes(&quot;Hello, Reader!&quot;);
+        using var stream = new MemoryStream(data);
+        
+        // Read in small chunks
+        byte[] buffer = new byte[8];
+        int bytesRead;
+        while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) &gt; 0)
+        {
+            Console.WriteLine($&quot;n = {bytesRead}&quot;);
+            Console.WriteLine($&quot;b = [{string.Join(&quot;, &quot;, buffer)}]&quot;);
+            Console.WriteLine($&quot;b[:n] = \&quot;{Encoding.UTF8.GetString(buffer, 0, bytesRead)}\&quot;&quot;);
+        }
+    }
+}
+
+// Custom Stream implementation
+class AlphabetStream : Stream
+{
+    private byte current = (byte)'a' - 1;
+    
+    public override int Read(byte[] buffer, int offset, int count)
+    {
+        if (current &gt;= 'z')
+            return 0; // End of stream
+        
+        int bytesRead = 0;
+        for (int i = 0; i &lt; count &amp;&amp; current &lt; 'z'; i++)
+        {
+            current++;
+            buffer[offset + i] = current;
+            bytesRead++;
+        }
+        return bytesRead;
+    }
+    
+    // Required Stream members (read-only stream)
+    public override bool CanRead =&gt; true;
+    public override bool CanSeek =&gt; false;
+    public override bool CanWrite =&gt; false;
+    public override long Length =&gt; throw new NotSupportedException();
+    public override long Position 
+    { 
+        get =&gt; throw new NotSupportedException(); 
+        set =&gt; throw new NotSupportedException(); 
+    }
+    public override void Flush() { }
+    public override long Seek(long offset, SeekOrigin origin) =&gt; throw new NotSupportedException();
+    public override void SetLength(long value) =&gt; throw new NotSupportedException();
+    public override void Write(byte[] buffer, int offset, int count) =&gt; throw new NotSupportedException();
+}
+
+// Using Stream utilities
+static async Task DemonstrateStreamUtilities()
+{
+    // Read all data from stream
+    var data = Encoding.UTF8.GetBytes(&quot;Hello, World!&quot;);
+    using var ms = new MemoryStream(data);
+    using var reader = new StreamReader(ms);
+    string content = await reader.ReadToEndAsync();
+    Console.WriteLine(content); // Hello, World!
+    
+    // Copy stream to another
+    var source = new MemoryStream(Encoding.UTF8.GetBytes(&quot;Copy this&quot;));
+    var destination = new MemoryStream();
+    await source.CopyToAsync(destination);
+    Console.WriteLine($&quot;Copied {destination.Length} bytes&quot;);
+    
+    // Stream with modern async enumerable
+    await foreach (var chunk in ReadChunksAsync(ms, 4))
+    {
+        Console.WriteLine($&quot;Chunk: {Encoding.UTF8.GetString(chunk)}&quot;);
+    }
+}
+
+static async IAsyncEnumerable&lt;byte[]&gt; ReadChunksAsync(Stream stream, int chunkSize)
+{
+    byte[] buffer = new byte[chunkSize];
+    int bytesRead;
+    while ((bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length)) &gt; 0)
+    {
+        byte[] chunk = new byte[bytesRead];
+        Array.Copy(buffer, chunk, bytesRead);
+        yield return chunk;
+    }
+}</code></pre>
+</div>
+<div class="content-section key-differences">
+<h2>Key Differences</h2>
+<ul>
+<li><strong>Abstraction</strong>: Go Reader is a minimal interface (one method); C# Stream is an abstract class with many methods</li>
+<li><strong>Capabilities</strong>: Go Reader is read-only; C# Stream can support read, write, seek</li>
+<li><strong>Error Handling</strong>: Go returns (n, err); C# throws exceptions (or returns -1/0)</li>
+<li><strong>EOF Signaling</strong>: Go uses io.EOF error; C# returns 0 bytes read</li>
+<li><strong>Async Support</strong>: Go uses same interface (goroutines handle async); C# has separate async methods</li>
+<li><strong>Composition</strong>: Go Reader composes easily with decorators; C# requires inheriting Stream</li>
+<li><strong>Type System</strong>: Go uses interface; C# uses abstract class (can't implement multiple)</li>
+<li><strong>Simplicity</strong>: Go Reader is simpler and easier to implement; C# Stream is more feature-rich</li>
+<li><strong>Memory</strong>: Go provides byte slice to fill; C# takes buffer, offset, count parameters</li>
+<li><strong>Return Values</strong>: Go returns bytes read and error; C# returns bytes read, throws on error</li>
+<li><strong>Partial Reads</strong>: Both support partial reads; Go's error model makes this more explicit</li>
+<li><strong>Standard Library</strong>: Both have extensive ecosystem of Reader/Stream implementations</li>
+<li><strong>Testing</strong>: Go Reader easier to mock (interface); C# Stream requires more boilerplate</li>
+<li><strong>Modern Patterns</strong>: C# added IAsyncEnumerable for sequence operations; Go uses channels for streaming</li>
+<li><strong>Performance</strong>: Similar performance characteristics; both allow efficient chunk processing</li>
+</ul>
+</div>
+
+        
+        <div class="page-nav" id="pageNav">
+            <!-- Navigation buttons will be populated by JavaScript -->
+        </div>
+    </main>
+    
+    <script src="../assets/tour.js"></script>
+    <script>
+        // Add page navigation
+        const adjacent = getAdjacentPages();
+        const navContainer = document.getElementById('pageNav');
+        let navHtml = '';
+        
+        if (adjacent.prev) {
+            navHtml += '<a href="' + adjacent.prev.href + '" class="prev">' + adjacent.prev.title + '</a>';
+        } else {
+            navHtml += '<span></span>';
+        }
+        
+        if (adjacent.next) {
+            navHtml += '<a href="' + adjacent.next.href + '" class="next">' + adjacent.next.title + '</a>';
+        }
+        
+        navContainer.innerHTML = navHtml;
+    </script>
+</body>
+</html>

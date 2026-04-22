@@ -14,7 +14,7 @@ Learn goroutines by writing a program that greets multiple people in parallel, s
 
 ## Tour Reference — Read These First
 
-1. [Goroutines](https://go.dev/tour/concurrency/1) — `go f(x)` starts a new goroutine running `f(x)`
+1. [Goroutines](tour/concurrency/01-goroutines.html) — `go f(x)` starts a new goroutine running `f(x)`
 
 ## What to Build
 

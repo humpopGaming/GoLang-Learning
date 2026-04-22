@@ -1,0 +1,113 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forever - Go Tour with C# Comparison</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <button class="menu-toggle">☰ Menu</button>
+    
+    <nav class="nav-sidebar">
+        <!-- Navigation will be populated by JavaScript -->
+    </nav>
+    
+    <main class="main-content">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span>/</span>
+            <a href="01-for.html">Flow Control</a>
+            <span>/</span>
+            <span>Forever</span>
+        </div>
+        
+
+        <div class="content-header">
+            <h1>Forever</h1>
+            <div class="page-meta">
+                <span class="page-badge section">Flow Control</span>
+                <span class="page-badge page-number">Page 4 of 13</span>
+            </div>
+        </div>
+        
+        <div class="content-section go-section">
+<h2>Go Concept</h2>
+<p>If you omit the loop condition entirely, you create an <strong>infinite loop</strong>. This is commonly written as <code>for {}</code> or <code>for { }</code> in Go.</p>
+<p>Infinite loops are useful for servers, event loops, and situations where you break out based on internal logic rather than a loop condition.</p>
+<h3>Go Example</h3>
+<pre><code class="language-go">package main
+
+func main() {
+	// Infinite loop
+	for {
+		// This loops forever until break or return
+		// Typically used in servers or event loops
+	}
+}</code></pre>
+</div>
+<div class="content-section csharp-section">
+<h2>C# Equivalent</h2>
+<p>C# has several ways to create infinite loops:</p>
+<p>1. <strong><code>while (true)</code></strong> � Most explicit and commonly used 2. <strong><code>for (;;)</code></strong> � C-style infinite loop 3. <strong><code>do { } while (true);</code></strong> � Less common</p>
+<p>C# developers typically use <code>while (true)</code> because it's most explicit and readable.</p>
+<h3>C# Example</h3>
+<pre><code class="language-csharp">using System;
+
+class Program
+{
+    static void Main()
+    {
+        // Most idiomatic C# infinite loop
+        while (true)
+        {
+            // Loops forever until break or return
+        }
+
+        // Alternative: for style (less common)
+        for (;;)
+        {
+            // Also infinite
+        }
+    }
+}</code></pre>
+</div>
+<div class="content-section key-differences">
+<h2>Key Differences</h2>
+<ul>
+<li><strong>Syntax</strong>: Go uses <code>for {}</code>; C# typically uses <code>while (true)</code></li>
+<li><strong>Clarity</strong>: C#'s <code>while (true)</code> is more explicit; Go's <code>for {}</code> is more concise</li>
+<li><strong>Alternatives</strong>: C# has multiple ways; Go has one way</li>
+<li><strong>Common Usage</strong>: In Go, <code>for {}</code> is standard; in C#, <code>while (true)</code> is standard</li>
+<li><strong>Use Case Alignment</strong>: Both create infinite loops for the same purposes (servers, event processors, etc.). The only difference is syntax and explicitness. <strong>C#'s <code>while (true)</code> immediately signals an intentional infinite loop</strong>, while Go's <code>for {}</code> might look like a typo to newcomers. Both require <code>break</code> or <code>return</code> to exit.</li>
+</ul>
+<p>Both serve identical use cases. C# is more explicit, Go is more concise. Personal/team preference and language idioms determine which is "better."</p>
+</div>
+
+        
+        <div class="page-nav" id="pageNav">
+            <!-- Navigation buttons will be populated by JavaScript -->
+        </div>
+    </main>
+    
+    <script src="../assets/tour.js"></script>
+    <script>
+        // Add page navigation
+        const adjacent = getAdjacentPages();
+        const navContainer = document.getElementById('pageNav');
+        let navHtml = '';
+        
+        if (adjacent.prev) {
+            navHtml += '<a href="' + adjacent.prev.href + '" class="prev">' + adjacent.prev.title + '</a>';
+        } else {
+            navHtml += '<span></span>';
+        }
+        
+        if (adjacent.next) {
+            navHtml += '<a href="' + adjacent.next.href + '" class="next">' + adjacent.next.title + '</a>';
+        }
+        
+        navContainer.innerHTML = navHtml;
+    </script>
+</body>
+</html>

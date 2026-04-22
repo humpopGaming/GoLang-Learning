@@ -1,0 +1,220 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise: Maps - Go Tour with C# Comparison</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <button class="menu-toggle">☰ Menu</button>
+    
+    <nav class="nav-sidebar">
+        <!-- Navigation will be populated by JavaScript -->
+    </nav>
+    
+    <main class="main-content">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span>/</span>
+            <a href="01-pointers.html">More Types</a>
+            <span>/</span>
+            <span>Exercise: Maps</span>
+        </div>
+        
+
+        <div class="content-header">
+            <h1>Exercise: Maps</h1>
+            <div class="page-meta">
+                <span class="page-badge section">More Types</span>
+                <span class="page-badge page-number">Page 23 of 25</span>
+            </div>
+        </div>
+        
+        <div class="content-section go-section">
+<h2>Go Concept</h2>
+<p><strong>Exercise</strong>: Implement <code>WordCount</code>. It should return a map of the counts of each "word" in the string <code>s</code>. The <code>wc.Test</code> function runs a test suite against the provided function and prints success or failure.</p>
+<p>This exercise tests your understanding of:</p>
+<ul>
+<li>Creating and manipulating maps</li>
+<li>Iterating over strings</li>
+<li>Splitting strings into words</li>
+<li>Updating map values</li>
+</ul>
+<p>You might find <code>strings.Fields</code> helpful.</p>
+<h3>Go Example</h3>
+<pre><code class="language-go">package main
+
+import (
+	&quot;strings&quot;
+	&quot;fmt&quot;
+)
+
+func WordCount(s string) map[string]int {
+	wordMap := make(map[string]int)
+	words := strings.Fields(s)
+	
+	for _, word := range words {
+		wordMap[word]++
+	}
+	
+	return wordMap
+}
+
+func main() {
+	test := &quot;I am learning Go!&quot;
+	result := WordCount(test)
+	fmt.Println(result)
+	// Output: map[I:1 am:1 learning:1 Go!:1]
+	
+	test2 := &quot;the quick brown fox jumped over the lazy dog&quot;
+	result2 := WordCount(test2)
+	fmt.Println(result2)
+	// Output: map[the:2 quick:1 brown:1 fox:1 jumped:1 over:1 lazy:1 dog:1]
+}</code></pre>
+<p><strong>Key techniques demonstrated</strong>: 1. Create a map with <code>make(map[string]int)</code> 2. Use <code>strings.Fields(s)</code> to split by whitespace 3. Iterate with <code>range</code> over the slice of words 4. Increment counts using <code>wordMap[word]++</code> (zero value is 0 for int) 5. Return the populated map</p>
+</div>
+<div class="content-section csharp-section">
+<h2>C# Equivalent</h2>
+<p>C# implementation using <strong>Dictionary</strong> and LINQ:</p>
+<p>This exercise demonstrates:</p>
+<ul>
+<li>Dictionary creation and manipulation</li>
+<li>String splitting</li>
+<li>LINQ grouping and counting</li>
+<li>Both imperative and functional approaches</li>
+</ul>
+<h3>C# Example</h3>
+<pre><code class="language-csharp">using System;
+using System.Collections.Generic;
+using System.Linq;
+
+class Program
+{
+    // Imperative approach (similar to Go)
+    static Dictionary&lt;string, int&gt; WordCount(string s)
+    {
+        var wordMap = new Dictionary&lt;string, int&gt;();
+        var words = s.Split(new[] { ' ', '\t', '\n' }, 
+                           StringSplitOptions.RemoveEmptyEntries);
+        
+        foreach (var word in words)
+        {
+            if (wordMap.ContainsKey(word))
+                wordMap[word]++;
+            else
+                wordMap[word] = 1;
+        }
+        
+        return wordMap;
+    }
+
+    // More idiomatic C#: using TryGetValue
+    static Dictionary&lt;string, int&gt; WordCountIdiomatic(string s)
+    {
+        var wordMap = new Dictionary&lt;string, int&gt;();
+        var words = s.Split(new[] { ' ', '\t', '\n' }, 
+                           StringSplitOptions.RemoveEmptyEntries);
+        
+        foreach (var word in words)
+        {
+            if (wordMap.TryGetValue(word, out int count))
+                wordMap[word] = count + 1;
+            else
+                wordMap[word] = 1;
+        }
+        
+        return wordMap;
+    }
+
+    // LINQ functional approach
+    static Dictionary&lt;string, int&gt; WordCountLinq(string s)
+    {
+        return s.Split(new[] { ' ', '\t', '\n' }, 
+                      StringSplitOptions.RemoveEmptyEntries)
+                .GroupBy(word =&gt; word)
+                .ToDictionary(group =&gt; group.Key, group =&gt; group.Count());
+    }
+
+    static void Main()
+    {
+        string test = &quot;I am learning Go!&quot;;
+        var result = WordCount(test);
+        
+        foreach (var kvp in result)
+        {
+            Console.WriteLine($&quot;{kvp.Key}: {kvp.Value}&quot;);
+        }
+        // Output: I: 1, am: 1, learning: 1, Go!: 1
+
+        Console.WriteLine();
+
+        string test2 = &quot;the quick brown fox jumped over the lazy dog&quot;;
+        var result2 = WordCountLinq(test2);
+        
+        foreach (var kvp in result2)
+        {
+            Console.WriteLine($&quot;{kvp.Key}: {kvp.Value}&quot;);
+        }
+        // Output includes: the: 2, quick: 1, etc.
+    }
+}</code></pre>
+</div>
+<div class="content-section key-differences">
+<h2>Key Differences</h2>
+<ul>
+<li><strong>Zero Value</strong>: Go's int zero value (0) allows direct increment <code>m[key]++</code>; C# requires checking existence first</li>
+<li><strong>Increment Pattern</strong>: Go: <code>m[key]++</code> always works; C# needs <code>ContainsKey</code> check or <code>TryGetValue</code></li>
+<li><strong>String Splitting</strong>: Go's <code>strings.Fields</code> auto-handles whitespace; C# <code>Split</code> requires explicit separators</li>
+<li><strong>Functional Style</strong>: Go is imperative; C# offers LINQ functional approach with <code>GroupBy</code> and <code>ToDictionary</code></li>
+<li><strong>Idiomatic Check</strong>: Go's comma-ok simple; C# has <code>TryGetValue</code> pattern for efficiency</li>
+<li><strong>Iteration</strong>: Go's <code>range</code> is concise; C# uses <code>foreach</code> over <code>KeyValuePair</code></li>
+<li><strong>Code Length</strong>: Go's zero value makes it more concise; C# needs explicit existence checks (imperative) or LINQ (functional)</li>
+</ul>
+<p><strong>Different philosophies</strong>:</p>
+<ul>
+<li>Go: Simple, direct, zero values eliminate null checks</li>
+<li>C#: Multiple approaches (imperative vs LINQ), explicit safety checks</li>
+</ul>
+<p><strong>Why C# is more verbose</strong>:</p>
+<ul>
+<li>No zero value concept for reference types in dictionaries</li>
+<li>Must check existence before incrementing</li>
+<li>More defensive programming required</li>
+</ul>
+<p><strong>C# advantages</strong>:</p>
+<ul>
+<li>LINQ provides elegant functional solution</li>
+<li><code>TryGetValue</code> is very efficient (single lookup)</li>
+<li>More explicit about what's happening</li>
+</ul>
+<p>Both solve the problem effectively, but Go's zero value semantics make the imperative approach cleaner. C#'s LINQ provides an alternative that's arguably more readable once you understand the functional approach.</p>
+</div>
+
+        
+        <div class="page-nav" id="pageNav">
+            <!-- Navigation buttons will be populated by JavaScript -->
+        </div>
+    </main>
+    
+    <script src="../assets/tour.js"></script>
+    <script>
+        // Add page navigation
+        const adjacent = getAdjacentPages();
+        const navContainer = document.getElementById('pageNav');
+        let navHtml = '';
+        
+        if (adjacent.prev) {
+            navHtml += '<a href="' + adjacent.prev.href + '" class="prev">' + adjacent.prev.title + '</a>';
+        } else {
+            navHtml += '<span></span>';
+        }
+        
+        if (adjacent.next) {
+            navHtml += '<a href="' + adjacent.next.href + '" class="next">' + adjacent.next.title + '</a>';
+        }
+        
+        navContainer.innerHTML = navHtml;
+    </script>
+</body>
+</html>

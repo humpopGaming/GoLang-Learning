@@ -1,0 +1,122 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Continued - Go Tour with C# Comparison</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <button class="menu-toggle">☰ Menu</button>
+    
+    <nav class="nav-sidebar">
+        <!-- Navigation will be populated by JavaScript -->
+    </nav>
+    
+    <main class="main-content">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span>/</span>
+            <a href="01-for.html">Flow Control</a>
+            <span>/</span>
+            <span>For Continued</span>
+        </div>
+        
+
+        <div class="content-header">
+            <h1>For Continued</h1>
+            <div class="page-meta">
+                <span class="page-badge section">Flow Control</span>
+                <span class="page-badge page-number">Page 2 of 13</span>
+            </div>
+        </div>
+        
+        <div class="content-section go-section">
+<h2>Go Concept</h2>
+<p>The init and post statements in a <code>for</code> loop are <strong>optional</strong>. You can omit them while keeping the semicolons, or omit them entirely for a while-style loop.</p>
+<p>This flexibility means you can use <code>for</code> for different iteration patterns without needing separate loop types.</p>
+<h3>Go Example</h3>
+<pre><code class="language-go">package main
+
+import &quot;fmt&quot;
+
+func main() {
+	sum := 1
+	// Init and post omitted (semicolons dropped)
+	for sum &lt; 1000 {
+		sum += sum
+	}
+	fmt.Println(sum)
+}</code></pre>
+</div>
+<div class="content-section csharp-section">
+<h2>C# Equivalent</h2>
+<p>C# <code>for</code> loop also allows omitting init and post statements, but you typically use a <code>while</code> loop instead when you don't need them:</p>
+<ul>
+<li><code>for (;condition;)</code> is valid but unusual</li>
+<li><code>while (condition)</code> is the idiomatic choice</li>
+</ul>
+<p>C# has explicit loop types for different patterns, while Go uses <code>for</code> for everything.</p>
+<h3>C# Example</h3>
+<pre><code class="language-csharp">using System;
+
+class Program
+{
+    static void Main()
+    {
+        int sum = 1;
+        
+        // Idiomatic C#: use while loop
+        while (sum &lt; 1000)
+        {
+            sum += sum;
+        }
+        Console.WriteLine(sum);
+
+        // Valid but unusual: for loop with only condition
+        int sum2 = 1;
+        for (; sum2 &lt; 1000;)
+        {
+            sum2 += sum2;
+        }
+    }
+}</code></pre>
+</div>
+<div class="content-section key-differences">
+<h2>Key Differences</h2>
+<ul>
+<li><strong>Loop Types</strong>: Go uses <code>for</code> for all loops; C# has dedicated <code>while</code> loop for this pattern</li>
+<li><strong>Idiomacy</strong>: Go's <code>for condition {}</code> is standard; C#'s <code>for (; condition;)</code> is unusual</li>
+<li><strong>Readability</strong>: C#'s <code>while</code> is clearer for condition-only loops; Go's <code>for</code> is consistent but less descriptive</li>
+<li><strong>Flexibility vs Explicitness</strong>: Go's single loop type is simple; C#'s multiple types are more explicit about intent</li>
+<li><strong>Use Case Alignment</strong>: Both support condition-only looping (like while loops). C# has a dedicated <code>while</code> keyword that makes this intent clearer, while Go achieves the same functionality by allowing you to omit parts of the <code>for</code> loop. The use case is identical � checking a condition before each iteration without init or post logic. C# developers use <code>while</code>; Go developers use <code>for</code> without init/post.</li>
+</ul>
+</div>
+
+        
+        <div class="page-nav" id="pageNav">
+            <!-- Navigation buttons will be populated by JavaScript -->
+        </div>
+    </main>
+    
+    <script src="../assets/tour.js"></script>
+    <script>
+        // Add page navigation
+        const adjacent = getAdjacentPages();
+        const navContainer = document.getElementById('pageNav');
+        let navHtml = '';
+        
+        if (adjacent.prev) {
+            navHtml += '<a href="' + adjacent.prev.href + '" class="prev">' + adjacent.prev.title + '</a>';
+        } else {
+            navHtml += '<span></span>';
+        }
+        
+        if (adjacent.next) {
+            navHtml += '<a href="' + adjacent.next.href + '" class="next">' + adjacent.next.title + '</a>';
+        }
+        
+        navContainer.innerHTML = navHtml;
+    </script>
+</body>
+</html>

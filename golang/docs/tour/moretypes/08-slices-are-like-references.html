@@ -1,0 +1,144 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slices Are Like References to Arrays - Go Tour with C# Comparison</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <button class="menu-toggle">☰ Menu</button>
+    
+    <nav class="nav-sidebar">
+        <!-- Navigation will be populated by JavaScript -->
+    </nav>
+    
+    <main class="main-content">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span>/</span>
+            <a href="01-pointers.html">More Types</a>
+            <span>/</span>
+            <span>Slices Are Like References to Arrays</span>
+        </div>
+        
+
+        <div class="content-header">
+            <h1>Slices Are Like References to Arrays</h1>
+            <div class="page-meta">
+                <span class="page-badge section">More Types</span>
+                <span class="page-badge page-number">Page 8 of 25</span>
+            </div>
+        </div>
+        
+        <div class="content-section go-section">
+<h2>Go Concept</h2>
+<p>A <strong>slice does not store any data</strong> � it just describes a section of an underlying array.</p>
+<p>Changing the elements of a slice modifies the corresponding elements of its underlying array. Other slices that share the same underlying array will see those changes.</p>
+<h3>Go Example</h3>
+<pre><code class="language-go">package main
+
+import &quot;fmt&quot;
+
+func main() {
+	names := [4]string{
+		&quot;John&quot;,
+		&quot;Paul&quot;,
+		&quot;George&quot;,
+		&quot;Ringo&quot;,
+	}
+	fmt.Println(names)
+
+	a := names[0:2]
+	b := names[1:3]
+	fmt.Println(a, b)
+
+	b[0] = &quot;XXX&quot;
+	fmt.Println(a, b)
+	fmt.Println(names)
+}</code></pre>
+<p>Output:</p>
+<pre><code class="language-">[John Paul George Ringo]
+[John Paul] [Paul George]
+[John XXX] [XXX George]
+[John XXX George Ringo]</code></pre>
+</div>
+<div class="content-section csharp-section">
+<h2>C# Equivalent</h2>
+<p>C# has similar behavior with <strong>Span<T></strong> and <strong>ArraySegment<T></strong> � they are views into arrays, not copies.</p>
+<p>Modifying elements through a span affects the underlying array. Multiple spans over the same array will see each other's changes.</p>
+<h3>C# Example</h3>
+<pre><code class="language-csharp">using System;
+
+class Program
+{
+    static void Main()
+    {
+        string[] names = { &quot;John&quot;, &quot;Paul&quot;, &quot;George&quot;, &quot;Ringo&quot; };
+        Console.WriteLine(string.Join(&quot; &quot;, names));
+
+        // Span&lt;T&gt; creates views into the array
+        Span&lt;string&gt; a = names.AsSpan(0, 2);
+        Span&lt;string&gt; b = names.AsSpan(1, 3);
+        
+        Console.WriteLine($&quot;[{string.Join(&quot; &quot;, a.ToArray())}] [{string.Join(&quot; &quot;, b.ToArray())}]&quot;);
+
+        // Modifying b affects the underlying array
+        b[0] = &quot;XXX&quot;;
+        
+        Console.WriteLine($&quot;[{string.Join(&quot; &quot;, a.ToArray())}] [{string.Join(&quot; &quot;, b.ToArray())}]&quot;);
+        Console.WriteLine(string.Join(&quot; &quot;, names));
+    }
+}</code></pre>
+<p>Output:</p>
+<pre><code class="language-">John Paul George Ringo
+[John Paul] [Paul George]
+[John XXX] [XXX George]
+John XXX George Ringo</code></pre>
+</div>
+<div class="content-section key-differences">
+<h2>Key Differences</h2>
+<ul>
+<li><strong>Reference Semantics</strong>: Both Go slices and C# spans are references/views � they don't copy data</li>
+<li><strong>Syntax</strong>: Go has built-in slice syntax; C# requires <code>AsSpan()</code> method calls</li>
+<li><strong>Shared Modifications</strong>: Both see changes to the underlying array when multiple views overlap</li>
+<li><strong>Default Behavior</strong>: Go slices are always references; C# arrays can be copied with <code>.ToArray()</code> or used as views with <code>Span&lt;T&gt;</code></li>
+<li><strong>Common Pattern</strong>: Go developers use slices constantly; C# developers use <code>Span&lt;T&gt;</code> for performance scenarios but often copy arrays</li>
+<li><strong>Memory Efficiency</strong>: Both avoid copying data when slicing/spanning</li>
+<li><strong>Use Case Alignment</strong>: Go slices and C# <code>Span&lt;T&gt;</code> both provide efficient views that reference underlying data. <strong>Key difference</strong>: Go slices can grow with <code>append()</code> (creating new array if needed); <strong>C# spans are fixed-size views</strong>.</li>
+</ul>
+<p><strong>Philosophy difference</strong>:</p>
+<ul>
+<li><strong>Go</strong>: Slices as references is the default, expected behavior</li>
+<li><strong>C#</strong>: Spans are opt-in for performance; default pattern is copying arrays or using <code>List&lt;T&gt;</code></li>
+</ul>
+<p>The reference behavior is identical when used, but <strong>Go makes this the primary pattern</strong> while <strong>C# treats it as an optimization technique</strong>. Most C# code would use <code>List&lt;T&gt;</code> or copy arrays rather than manage span references.</p>
+</div>
+
+        
+        <div class="page-nav" id="pageNav">
+            <!-- Navigation buttons will be populated by JavaScript -->
+        </div>
+    </main>
+    
+    <script src="../assets/tour.js"></script>
+    <script>
+        // Add page navigation
+        const adjacent = getAdjacentPages();
+        const navContainer = document.getElementById('pageNav');
+        let navHtml = '';
+        
+        if (adjacent.prev) {
+            navHtml += '<a href="' + adjacent.prev.href + '" class="prev">' + adjacent.prev.title + '</a>';
+        } else {
+            navHtml += '<span></span>';
+        }
+        
+        if (adjacent.next) {
+            navHtml += '<a href="' + adjacent.next.href + '" class="next">' + adjacent.next.title + '</a>';
+        }
+        
+        navContainer.innerHTML = navHtml;
+    </script>
+</body>
+</html>

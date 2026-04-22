@@ -15,13 +15,13 @@ Build an "animal sounds" program to learn interfaces — Go's way of defining be
 
 ## Tour Reference — Read These First
 
-1. [Interfaces](https://go.dev/tour/methods/9) — An interface type is a set of method signatures
-2. [Interfaces are implemented implicitly](https://go.dev/tour/methods/10) — No "implements" keyword
-3. [Interface values](https://go.dev/tour/methods/11) — Under the hood: (value, type) tuple
-4. [Interface values with nil underlying values](https://go.dev/tour/methods/12) — Methods can handle nil receivers
-5. [Nil interface values](https://go.dev/tour/methods/13) — Calling a method on a nil interface panics
-6. [The empty interface](https://go.dev/tour/methods/14) — `interface{}` holds any type
-7. [Stringers](https://go.dev/tour/methods/17) — `fmt.Stringer` lets you control how a type prints
+1. [Interfaces](tour/methods/09-interfaces.html) — An interface type is a set of method signatures
+2. [Interfaces are Implemented Implicitly](tour/methods/10-interfaces-are-implemented-implicitly.html) — No "implements" keyword
+3. [Interface Values](tour/methods/11-interface-values.html) — Under the hood: (value, type) tuple
+4. [Interface Values with Nil Underlying Values](tour/methods/12-interface-values-with-nil-underlying-values.html) — Methods can handle nil receivers
+5. [Nil Interface Values](tour/methods/13-nil-interface-values.html) — Calling a method on a nil interface panics
+6. [The Empty Interface](tour/methods/14-the-empty-interface.html) — `interface{}` holds any type
+7. [Stringers](tour/methods/17-stringers.html) — `fmt.Stringer` lets you control how a type prints
 
 ## What to Build
 

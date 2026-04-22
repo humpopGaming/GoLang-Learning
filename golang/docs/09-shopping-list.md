@@ -19,18 +19,18 @@ Build a shopping list manager using arrays, slices, `append`, `make`, `range`, a
 
 ## Tour Reference — Read These First
 
-1. [Arrays](https://go.dev/tour/moretypes/6) — Fixed-size: `var a [10]int`
-2. [Slices](https://go.dev/tour/moretypes/7) — Dynamically-sized views: `a[1:4]`
-3. [Slices are like references to arrays](https://go.dev/tour/moretypes/8) — Changing a slice changes the underlying array
-4. [Slice literals](https://go.dev/tour/moretypes/9) — `[]int{1, 2, 3}` creates a slice
-5. [Slice defaults](https://go.dev/tour/moretypes/10) — `a[:5]`, `a[2:]`, `a[:]`
-6. [Slice length and capacity](https://go.dev/tour/moretypes/11) — `len(s)` and `cap(s)`
-7. [Nil slices](https://go.dev/tour/moretypes/12) — Zero value of a slice is `nil`
-8. [Creating a slice with make](https://go.dev/tour/moretypes/13) — `make([]int, 5)` or `make([]int, 0, 5)`
-9. [Slices of slices](https://go.dev/tour/moretypes/14) — Slices can contain slices
-10. [Appending to a slice](https://go.dev/tour/moretypes/15) — `append(s, 1, 2, 3)` grows the slice
-11. [Range](https://go.dev/tour/moretypes/16) — `for i, v := range slice`
-12. [Range continued](https://go.dev/tour/moretypes/17) — Skip index with `_`, or omit value
+1. [Arrays](tour/moretypes/06-arrays.html) — Fixed-size: `var a [10]int`
+2. [Slices](tour/moretypes/07-slices.html) — Dynamically-sized views: `a[1:4]`
+3. [Slices are Like References](tour/moretypes/08-slices-are-like-references.html) — Changing a slice changes the underlying array
+4. [Slice Literals](tour/moretypes/09-slice-literals.html) — `[]int{1, 2, 3}` creates a slice
+5. [Slice Defaults](tour/moretypes/10-slice-defaults.html) — `a[:5]`, `a[2:]`, `a[:]`
+6. [Slice Length and Capacity](tour/moretypes/11-slice-length-and-capacity.html) — `len(s)` and `cap(s)`
+7. [Nil Slices](tour/moretypes/12-nil-slices.html) — Zero value of a slice is `nil`
+8. [Creating Slices with Make](tour/moretypes/13-creating-slices-with-make.html) — `make([]int, 5)` or `make([]int, 0, 5)`
+9. [Slices of Slices](tour/moretypes/14-slices-of-slices.html) — Slices can contain slices
+10. [Appending to Slices](tour/moretypes/15-appending-to-slices.html) — `append(s, 1, 2, 3)` grows the slice
+11. [Range](tour/moretypes/16-range.html) — `for i, v := range slice`
+12. [Range Continued](tour/moretypes/17-range-continued.html) — Skip index with `_`, or omit value
 
 ## What to Build
 

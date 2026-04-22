@@ -1,0 +1,247 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buffered Channels - Go Tour with C# Comparison</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <button class="menu-toggle">☰ Menu</button>
+    
+    <nav class="nav-sidebar">
+        <!-- Navigation will be populated by JavaScript -->
+    </nav>
+    
+    <main class="main-content">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span>/</span>
+            <a href="01-goroutines.html">Concurrency</a>
+            <span>/</span>
+            <span>Buffered Channels</span>
+        </div>
+        
+
+        <div class="content-header">
+            <h1>Buffered Channels</h1>
+            <div class="page-meta">
+                <span class="page-badge section">Concurrency</span>
+                <span class="page-badge page-number">Page 3 of 9</span>
+            </div>
+        </div>
+        
+        <div class="content-section go-section">
+<h2>Go Concept</h2>
+<p>Channels can be <strong>buffered</strong>. Provide the buffer length as the second argument to <code>make</code> to create a buffered channel:</p>
+<pre><code class="language-go">ch := make(chan int, 100)</code></pre>
+<p><strong>Buffered channels</strong> allow sending without an immediate receiver:</p>
+<ul>
+<li>Sends to a buffered channel block only when the buffer is <strong>full</strong></li>
+<li>Receives from a buffered channel block only when the buffer is <strong>empty</strong></li>
+<li>Unbuffered channels (buffer size 0) block on every send until received</li>
+</ul>
+<p>Buffered channels are useful for:</p>
+<ul>
+<li>Rate limiting and throttling</li>
+<li>Decoupling producers from consumers</li>
+<li>Avoiding unnecessary blocking when you know capacity limits</li>
+</ul>
+<h3>Go Example</h3>
+<pre><code class="language-go">package main
+
+import &quot;fmt&quot;
+
+func main() {
+	// Create a buffered channel with capacity 2
+	ch := make(chan int, 2)
+	
+	// These sends don't block because buffer has space
+	ch &lt;- 1
+	ch &lt;- 2
+	
+	// This would block (buffer full) if uncommented:
+	// ch &lt;- 3
+	
+	// Receive values
+	fmt.Println(&lt;-ch) // Output: 1
+	fmt.Println(&lt;-ch) // Output: 2
+}</code></pre>
+<h3>Practical Example: Worker Pool</h3>
+<pre><code class="language-go">package main
+
+import (
+	&quot;fmt&quot;
+	&quot;time&quot;
+)
+
+func worker(id int, jobs &lt;-chan int, results chan&lt;- int) {
+	for j := range jobs {
+		fmt.Printf(&quot;Worker %d started job %d\n&quot;, id, j)
+		time.Sleep(time.Second) // Simulate work
+		fmt.Printf(&quot;Worker %d finished job %d\n&quot;, id, j)
+		results &lt;- j * 2
+	}
+}
+
+func main() {
+	const numJobs = 5
+	jobs := make(chan int, numJobs)      // Buffered: can queue all jobs
+	results := make(chan int, numJobs)   // Buffered: can collect all results
+
+	// Start 3 workers
+	for w := 1; w &lt;= 3; w++ {
+		go worker(w, jobs, results)
+	}
+
+	// Send 5 jobs (doesn't block because buffer has space)
+	for j := 1; j &lt;= numJobs; j++ {
+		jobs &lt;- j
+	}
+	close(jobs)
+
+	// Collect results
+	for a := 1; a &lt;= numJobs; a++ {
+		&lt;-results
+	}
+}</code></pre>
+</div>
+<div class="content-section csharp-section">
+<h2>C# Equivalent</h2>
+<p>C# <strong>Channel<T></strong> supports <strong>bounded channels</strong> which are directly equivalent to Go's buffered channels. C# also has <strong>BlockingCollection<T></strong> with bounded capacity.</p>
+<p>Key differences:</p>
+<ul>
+<li>Go's buffer size is fixed at creation</li>
+<li>C#'s BoundedChannelOptions provides more control (drop oldest, drop newest, wait)</li>
+<li>Both support blocking sends when full and blocking receives when empty</li>
+<li>C# uses async/await instead of blocking</li>
+</ul>
+<h3>C# Example (Bounded Channel)</h3>
+<pre><code class="language-csharp">using System;
+using System.Threading.Channels;
+using System.Threading.Tasks;
+
+class Program
+{
+    static async Task Main()
+    {
+        // Create a bounded channel with capacity 2
+        var channel = Channel.CreateBounded&lt;int&gt;(2);
+        
+        // These sends don't block because buffer has space
+        await channel.Writer.WriteAsync(1);
+        await channel.Writer.WriteAsync(2);
+        
+        // This would block (buffer full):
+        // await channel.Writer.WriteAsync(3);
+        
+        // Receive values
+        Console.WriteLine(await channel.Reader.ReadAsync()); // Output: 1
+        Console.WriteLine(await channel.Reader.ReadAsync()); // Output: 2
+    }
+}</code></pre>
+<h3>Practical Example: Worker Pool in C#</h3>
+<pre><code class="language-csharp">using System;
+using System.Threading;
+using System.Threading.Channels;
+using System.Threading.Tasks;
+
+class Program
+{
+    static async Task Worker(int id, ChannelReader&lt;int&gt; jobs, ChannelWriter&lt;int&gt; results)
+    {
+        await foreach (var job in jobs.ReadAllAsync())
+        {
+            Console.WriteLine($&quot;Worker {id} started job {job}&quot;);
+            await Task.Delay(1000); // Simulate work
+            Console.WriteLine($&quot;Worker {id} finished job {job}&quot;);
+            await results.WriteAsync(job * 2);
+        }
+    }
+
+    static async Task Main()
+    {
+        const int numJobs = 5;
+        var jobs = Channel.CreateBounded&lt;int&gt;(numJobs);      // Buffered
+        var results = Channel.CreateBounded&lt;int&gt;(numJobs);   // Buffered
+
+        // Start 3 workers
+        var workers = new Task[3];
+        for (int w = 0; w &lt; 3; w++)
+        {
+            int workerId = w + 1;
+            workers[w] = Worker(workerId, jobs.Reader, results.Writer);
+        }
+
+        // Send 5 jobs (doesn't block because buffer has space)
+        for (int j = 1; j &lt;= numJobs; j++)
+        {
+            await jobs.Writer.WriteAsync(j);
+        }
+        jobs.Writer.Complete();
+
+        // Wait for all workers to finish
+        await Task.WhenAll(workers);
+        results.Writer.Complete();
+
+        // Collect results
+        await foreach (var result in results.Reader.ReadAllAsync())
+        {
+            Console.WriteLine($&quot;Result: {result}&quot;);
+        }
+    }
+}</code></pre>
+<h3>C# Example (BlockingCollection - Traditional Approach)</h3>
+<pre><code class="language-csharp">using System;
+using System.Collections.Concurrent;
+using System.Threading;
+using System.Threading.Tasks;
+
+class Program
+{
+    static void Main()
+    {
+        // Bounded blocking collection with capacity 2
+        var queue = new BlockingCollection&lt;int&gt;(boundedCapacity: 2);
+        
+        // Add items (blocks if full)
+        queue.Add(1);
+        queue.Add(2);
+        
+        // This would block:
+        // queue.Add(3);
+        
+        // Take items (blocks if empty)
+        Console.WriteLine(queue.Take()); // Output: 1
+        Console.WriteLine(queue.Take()); // Output: 2
+    }
+}</code></pre>
+</div>
+
+        
+        <div class="page-nav" id="pageNav">
+            <!-- Navigation buttons will be populated by JavaScript -->
+        </div>
+    </main>
+    
+    <script src="../assets/tour.js"></script>
+    <script>
+        // Add page navigation
+        const adjacent = getAdjacentPages();
+        const navContainer = document.getElementById('pageNav');
+        let navHtml = '';
+        
+        if (adjacent.prev) {
+            navHtml += '<a href="' + adjacent.prev.href + '" class="prev">' + adjacent.prev.title + '</a>';
+        } else {
+            navHtml += '<span></span>';
+        }
+        
+        if (adjacent.next) {
+            navHtml += '<a href="' + adjacent.next.href + '" class="next">' + adjacent.next.title + '</a>';
+        }
+        
+        navContainer.innerHTML = navHtml;
+    </script>
+</body>
+</html>

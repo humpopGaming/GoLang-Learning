@@ -1,0 +1,297 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sync.Mutex - Go Tour with C# Comparison</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <button class="menu-toggle">☰ Menu</button>
+    
+    <nav class="nav-sidebar">
+        <!-- Navigation will be populated by JavaScript -->
+    </nav>
+    
+    <main class="main-content">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span>/</span>
+            <a href="01-goroutines.html">Concurrency</a>
+            <span>/</span>
+            <span>sync.Mutex</span>
+        </div>
+        
+
+        <div class="content-header">
+            <h1>sync.Mutex</h1>
+            <div class="page-meta">
+                <span class="page-badge section">Concurrency</span>
+                <span class="page-badge page-number">Page 9 of 9</span>
+            </div>
+        </div>
+        
+        <div class="content-section go-section">
+<h2>Go Concept</h2>
+<p><strong>Mutual exclusion</strong> (mutex) is used to protect shared data from concurrent access. While Go encourages communication through channels, sometimes you need to ensure that only one goroutine can access a variable at a time to avoid conflicts.</p>
+<p>Go's standard library provides <code>sync.Mutex</code> with two methods:</p>
+<ul>
+<li><code>Lock()</code> - Acquire the mutex (blocks if already locked)</li>
+<li><code>Unlock()</code> - Release the mutex</li>
+</ul>
+<h3>When to Use Mutex vs Channels</h3>
+<p><strong>Use channels when:</strong></p>
+<ul>
+<li>Communicating data between goroutines</li>
+<li>Coordinating goroutine execution</li>
+<li>Implementing pipelines or workflows</li>
+</ul>
+<p><strong>Use mutex when:</strong></p>
+<ul>
+<li>Protecting shared state (counters, caches, maps)</li>
+<li>Multiple goroutines need to read/modify the same data</li>
+<li>The data structure itself is the important thing (not the communication)</li>
+</ul>
+<p>Go philosophy: "Don't communicate by sharing memory; share memory by communicating." However, sometimes mutexes are the simpler solution.</p>
+<h3>Go Example</h3>
+<pre><code class="language-go">package main
+
+import (
+	&quot;fmt&quot;
+	&quot;sync&quot;
+	&quot;time&quot;
+)
+
+// SafeCounter is safe to use concurrently
+type SafeCounter struct {
+	mu sync.Mutex
+	v  map[string]int
+}
+
+// Inc increments the counter for the given key
+func (c *SafeCounter) Inc(key string) {
+	c.mu.Lock()
+	// Lock so only one goroutine at a time can access the map
+	c.v[key]++
+	c.mu.Unlock()
+}
+
+// Value returns the current value of the counter for the given key
+func (c *SafeCounter) Value(key string) int {
+	c.mu.Lock()
+	// Lock so only one goroutine at a time can access the map
+	defer c.mu.Unlock()
+	return c.v[key]
+}
+
+func main() {
+	c := SafeCounter{v: make(map[string]int)}
+	
+	// Launch 1000 goroutines that increment the same key
+	for i := 0; i &lt; 1000; i++ {
+		go c.Inc(&quot;somekey&quot;)
+	}
+
+	time.Sleep(time.Second)
+	fmt.Println(c.Value(&quot;somekey&quot;)) // Output: 1000
+}</code></pre>
+<h3>sync.RWMutex</h3>
+<p>Go also provides <code>sync.RWMutex</code> for <strong>reader-writer locks</strong>:</p>
+<ul>
+<li>Multiple readers can hold the lock simultaneously</li>
+<li>Only one writer can hold the lock</li>
+<li>Writers block both readers and other writers</li>
+</ul>
+<pre><code class="language-go">type Cache struct {
+	mu    sync.RWMutex
+	items map[string]string
+}
+
+func (c *Cache) Get(key string) string {
+	c.mu.RLock()         // Read lock
+	defer c.mu.RUnlock()
+	return c.items[key]
+}
+
+func (c *Cache) Set(key, value string) {
+	c.mu.Lock()          // Write lock
+	defer c.mu.Unlock()
+	c.items[key] = value
+}</code></pre>
+</div>
+<div class="content-section csharp-section">
+<h2>C# Equivalent</h2>
+<p>C# provides several synchronization primitives:</p>
+<ul>
+<li><strong><code>lock</code> keyword</strong> - Most common, similar to mutex</li>
+<li><strong><code>Monitor</code></strong> - Lower-level than lock</li>
+<li><strong><code>SemaphoreSlim</code></strong> - More flexible</li>
+<li><strong><code>ReaderWriterLockSlim</code></strong> - Similar to RWMutex</li>
+</ul>
+<h3><strong>Paradigm Context:</strong></h3>
+<p><strong>Go:</strong></p>
+<ul>
+<li>Mutexes are <strong>straightforward</strong> - lock/unlock</li>
+<li>Used sparingly; channels are preferred</li>
+<li>Goroutines are so cheap that blocking is fine</li>
+</ul>
+<p><strong>C#:</strong></p>
+<ul>
+<li>Multiple locking mechanisms available</li>
+<li>More common than channels</li>
+<li>Must be careful with async code (lock doesn't work with await)</li>
+<li><code>SemaphoreSlim</code> needed for async scenarios</li>
+</ul>
+<h3>C# Example (using lock)</h3>
+<pre><code class="language-csharp">using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+
+class SafeCounter
+{
+    private readonly object _lock = new object();
+    private readonly Dictionary&lt;string, int&gt; _values = new Dictionary&lt;string, int&gt;();
+
+    public void Inc(string key)
+    {
+        lock (_lock) // Lock so only one thread can access at a time
+        {
+            if (!_values.ContainsKey(key))
+                _values[key] = 0;
+            _values[key]++;
+        }
+    }
+
+    public int Value(string key)
+    {
+        lock (_lock)
+        {
+            return _values.ContainsKey(key) ? _values[key] : 0;
+        }
+    }
+}
+
+class Program
+{
+    static async Task Main()
+    {
+        var counter = new SafeCounter();
+        
+        // Launch 1000 tasks that increment the same key
+        var tasks = new Task[1000];
+        for (int i = 0; i &lt; 1000; i++)
+        {
+            tasks[i] = Task.Run(() =&gt; counter.Inc(&quot;somekey&quot;));
+        }
+        
+        await Task.WhenAll(tasks);
+        
+        Console.WriteLine(counter.Value(&quot;somekey&quot;)); // Output: 1000
+    }
+}</code></pre>
+<h3>C# Example (using ReaderWriterLockSlim)</h3>
+<pre><code class="language-csharp">using System;
+using System.Collections.Generic;
+using System.Threading;
+
+class Cache
+{
+    private readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
+    private readonly Dictionary&lt;string, string&gt; _items = new Dictionary&lt;string, string&gt;();
+
+    public string Get(string key)
+    {
+        _lock.EnterReadLock();
+        try
+        {
+            return _items.ContainsKey(key) ? _items[key] : null;
+        }
+        finally
+        {
+            _lock.ExitReadLock();
+        }
+    }
+
+    public void Set(string key, string value)
+    {
+        _lock.EnterWriteLock();
+        try
+        {
+            _items[key] = value;
+        }
+        finally
+        {
+            _lock.ExitWriteLock();
+        }
+    }
+}</code></pre>
+<h3>C# Async Example (using SemaphoreSlim)</h3>
+<p>The <code>lock</code> keyword doesn't work with async/await. Use <code>SemaphoreSlim</code> instead:</p>
+<pre><code class="language-csharp">using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+
+class AsyncSafeCounter
+{
+    private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
+    private readonly Dictionary&lt;string, int&gt; _values = new Dictionary&lt;string, int&gt;();
+
+    public async Task IncAsync(string key)
+    {
+        await _semaphore.WaitAsync(); // Like Lock()
+        try
+        {
+            if (!_values.ContainsKey(key))
+                _values[key] = 0;
+            _values[key]++;
+        }
+        finally
+        {
+            _semaphore.Release(); // Like Unlock()
+        }
+    }
+
+    public async Task&lt;int&gt; ValueAsync(string key)
+    {
+        await _semaphore.WaitAsync();
+        try
+        {
+            return _values.ContainsKey(key) ? _values[key] : 0;
+        }
+        finally
+        {
+            _semaphore.Release();
+        }
+    }
+}</code></pre>
+</div>
+
+        
+        <div class="page-nav" id="pageNav">
+            <!-- Navigation buttons will be populated by JavaScript -->
+        </div>
+    </main>
+    
+    <script src="../assets/tour.js"></script>
+    <script>
+        // Add page navigation
+        const adjacent = getAdjacentPages();
+        const navContainer = document.getElementById('pageNav');
+        let navHtml = '';
+        
+        if (adjacent.prev) {
+            navHtml += '<a href="' + adjacent.prev.href + '" class="prev">' + adjacent.prev.title + '</a>';
+        } else {
+            navHtml += '<span></span>';
+        }
+        
+        if (adjacent.next) {
+            navHtml += '<a href="' + adjacent.next.href + '" class="next">' + adjacent.next.title + '</a>';
+        }
+        
+        navContainer.innerHTML = navHtml;
+    </script>
+</body>
+</html>

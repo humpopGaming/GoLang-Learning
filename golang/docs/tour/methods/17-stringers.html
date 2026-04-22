@@ -1,0 +1,224 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stringers - Go Tour with C# Comparison</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <button class="menu-toggle">☰ Menu</button>
+    
+    <nav class="nav-sidebar">
+        <!-- Navigation will be populated by JavaScript -->
+    </nav>
+    
+    <main class="main-content">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span>/</span>
+            <a href="01-methods.html">Methods</a>
+            <span>/</span>
+            <span>Stringers</span>
+        </div>
+        
+
+        <div class="content-header">
+            <h1>Stringers</h1>
+            <div class="page-meta">
+                <span class="page-badge section">Methods</span>
+                <span class="page-badge page-number">Page 17 of 23</span>
+            </div>
+        </div>
+        
+        <div class="content-section go-section">
+<h2>Go Concept</h2>
+<p>One of the most ubiquitous interfaces in Go is <strong>Stringer</strong>, defined by the <code>fmt</code> package:</p>
+<pre><code class="language-go">type Stringer interface {
+    String() string
+}</code></pre>
+<p>A Stringer is a type that can describe itself as a string. The <code>fmt</code> package (and many others) look for this interface to print values. Implementing <code>String()</code> is similar to implementing <code>toString()</code> in other languages.</p>
+<p>When you implement the Stringer interface, functions like <code>fmt.Println</code> will automatically use your custom string representation instead of the default one.</p>
+<h3>Go Example</h3>
+<pre><code class="language-go">package main
+
+import &quot;fmt&quot;
+
+type Person struct {
+	Name string
+	Age  int
+}
+
+// Person implements fmt.Stringer
+func (p Person) String() string {
+	return fmt.Sprintf(&quot;%v (%v years)&quot;, p.Name, p.Age)
+}
+
+type IPAddr [4]byte
+
+// IPAddr implements fmt.Stringer
+func (ip IPAddr) String() string {
+	return fmt.Sprintf(&quot;%d.%d.%d.%d&quot;, ip[0], ip[1], ip[2], ip[3])
+}
+
+type Point struct {
+	X, Y int
+}
+
+// Point with custom formatting
+func (p Point) String() string {
+	return fmt.Sprintf(&quot;Point{x=%d, y=%d}&quot;, p.X, p.Y)
+}
+
+func main() {
+	p := Person{&quot;Arthur Dent&quot;, 42}
+	fmt.Println(p) // Arthur Dent (42 years)
+	
+	ip := IPAddr{127, 0, 0, 1}
+	fmt.Println(ip) // 127.0.0.1
+	
+	pt := Point{10, 20}
+	fmt.Println(pt) // Point{x=10, y=20}
+	
+	// Stringer is used implicitly
+	fmt.Printf(&quot;Person: %v\n&quot;, p)  // Person: Arthur Dent (42 years)
+	fmt.Printf(&quot;IP: %s\n&quot;, ip)     // IP: 127.0.0.1
+}</code></pre>
+</div>
+<div class="content-section csharp-section">
+<h2>C# Equivalent</h2>
+<p>C# provides two main mechanisms for custom string representation: 1. <strong>ToString() override</strong>: Overriding <code>Object.ToString()</code> method 2. <strong>IFormattable interface</strong>: For format-specific string representations</p>
+<p>Every object in C# inherits <code>ToString()</code> from <code>Object</code>, so you override it rather than implementing an interface. For more sophisticated formatting, you can implement <code>IFormattable</code> which allows different format strings.</p>
+<h3>C# Example</h3>
+<pre><code class="language-csharp">using System;
+
+// Basic ToString override
+class Person
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+    
+    public override string ToString()
+    {
+        return $&quot;{Name} ({Age} years)&quot;;
+    }
+}
+
+// ToString with struct
+struct IPAddr
+{
+    private readonly byte[] octets;
+    
+    public IPAddr(byte a, byte b, byte c, byte d)
+    {
+        octets = new byte[] { a, b, c, d };
+    }
+    
+    public override string ToString()
+    {
+        return $&quot;{octets[0]}.{octets[1]}.{octets[2]}.{octets[3]}&quot;;
+    }
+}
+
+// IFormattable for advanced formatting
+struct Point : IFormattable
+{
+    public int X { get; set; }
+    public int Y { get; set; }
+    
+    // Standard ToString
+    public override string ToString()
+    {
+        return ToString(&quot;G&quot;, null);
+    }
+    
+    // IFormattable.ToString for custom formats
+    public string ToString(string format, IFormatProvider provider)
+    {
+        if (string.IsNullOrEmpty(format)) format = &quot;G&quot;;
+        
+        return format.ToUpperInvariant() switch
+        {
+            &quot;G&quot; =&gt; $&quot;Point{{x={X}, y={Y}}}&quot;,
+            &quot;C&quot; =&gt; $&quot;({X}, {Y})&quot;,           // Compact
+            &quot;V&quot; =&gt; $&quot;[{X}; {Y}]&quot;,           // Vector notation
+            _ =&gt; throw new FormatException($&quot;Format '{format}' not supported&quot;)
+        };
+    }
+}
+
+// Record with custom ToString (C# 9.0+)
+record Product(string Name, decimal Price)
+{
+    public override string ToString() =&gt; $&quot;{Name}: ${Price:F2}&quot;;
+}
+
+class Program
+{
+    static void Main()
+    {
+        var p = new Person { Name = &quot;Arthur Dent&quot;, Age = 42 };
+        Console.WriteLine(p); // Arthur Dent (42 years)
+        
+        var ip = new IPAddr(127, 0, 0, 1);
+        Console.WriteLine(ip); // 127.0.0.1
+        
+        var pt = new Point { X = 10, Y = 20 };
+        Console.WriteLine(pt);              // Point{x=10, y=20}
+        Console.WriteLine(pt.ToString(&quot;C&quot;, null)); // (10, 20)
+        Console.WriteLine(pt.ToString(&quot;V&quot;, null)); // [10; 20]
+        
+        // ToString is used implicitly
+        Console.WriteLine($&quot;Person: {p}&quot;);  // Person: Arthur Dent (42 years)
+        Console.WriteLine($&quot;IP: {ip}&quot;);     // IP: 127.0.0.1
+        
+        var prod = new Product(&quot;Widget&quot;, 29.99m);
+        Console.WriteLine(prod); // Widget: $29.99
+    }
+}</code></pre>
+</div>
+<div class="content-section key-differences">
+<h2>Key Differences</h2>
+<ul>
+<li><strong>Interface vs Override</strong>: Go implements <code>Stringer</code> interface; C# overrides <code>ToString()</code> method from Object</li>
+<li><strong>Type System</strong>: Go's approach is more decoupled (any type can implement); C# inherits from Object base class</li>
+<li><strong>Formatting Options</strong>: Go has single <code>String()</code> method; C# can implement <code>IFormattable</code> for format strings</li>
+<li><strong>Implicit Use</strong>: Both are called implicitly by formatting functions (fmt in Go, string interpolation in C#)</li>
+<li><strong>Null Safety</strong>: Go doesn't call methods on nil interfaces; C# can call ToString() on null (returns empty string or throws)</li>
+<li><strong>Default Behavior</strong>: Go prints struct field values by default; C# prints type name by default</li>
+<li><strong>Format Verbs</strong>: Go uses format verbs like <code>%v</code>, <code>%s</code>; C# uses format strings and IFormattable</li>
+<li><strong>Performance</strong>: Go's interface dispatch is simple; C# virtual method call has similar performance</li>
+<li><strong>Multiple Formats</strong>: Go uses different format verbs; C# uses IFormattable with format strings</li>
+<li><strong>Discovery</strong>: Go Stringer is interface-based, optional; C# ToString() is always available</li>
+<li><strong>Testing</strong>: Both approaches are easy to test; Go can test interface conformance explicitly</li>
+<li><strong>Common Practice</strong>: Both are idiomatic ways to provide string representations of custom types</li>
+</ul>
+</div>
+
+        
+        <div class="page-nav" id="pageNav">
+            <!-- Navigation buttons will be populated by JavaScript -->
+        </div>
+    </main>
+    
+    <script src="../assets/tour.js"></script>
+    <script>
+        // Add page navigation
+        const adjacent = getAdjacentPages();
+        const navContainer = document.getElementById('pageNav');
+        let navHtml = '';
+        
+        if (adjacent.prev) {
+            navHtml += '<a href="' + adjacent.prev.href + '" class="prev">' + adjacent.prev.title + '</a>';
+        } else {
+            navHtml += '<span></span>';
+        }
+        
+        if (adjacent.next) {
+            navHtml += '<a href="' + adjacent.next.href + '" class="next">' + adjacent.next.title + '</a>';
+        }
+        
+        navContainer.innerHTML = navHtml;
+    </script>
+</body>
+</html>

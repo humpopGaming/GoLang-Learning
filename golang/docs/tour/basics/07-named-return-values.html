@@ -1,0 +1,143 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Named Return Values - Go Tour with C# Comparison</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <button class="menu-toggle">☰ Menu</button>
+    
+    <nav class="nav-sidebar">
+        <!-- Navigation will be populated by JavaScript -->
+    </nav>
+    
+    <main class="main-content">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span>/</span>
+            <a href="01-packages.html">Basics</a>
+            <span>/</span>
+            <span>Named Return Values</span>
+        </div>
+        
+
+        <div class="content-header">
+            <h1>Named Return Values</h1>
+            <div class="page-meta">
+                <span class="page-badge section">Basics</span>
+                <span class="page-badge page-number">Page 7 of 16</span>
+            </div>
+        </div>
+        
+        <div class="content-section go-section">
+<h2>Go Concept</h2>
+<p>Go's return values can be <strong>named</strong>. Named return values are treated as variables defined at the top of the function and can be referenced and modified throughout the function body.</p>
+<p>A <code>return</code> statement without arguments returns the current values of the named return values. This is called a "naked return" and should be used sparingly for clarity.</p>
+<h3>Go Example</h3>
+<pre><code class="language-go">package main
+
+import &quot;fmt&quot;
+
+func split(sum int) (x, y int) {
+	x = sum * 4 / 9
+	y = sum - x
+	return  // naked return returns x and y
+}
+
+func divmod(dividend, divisor int) (quotient, remainder int) {
+	quotient = dividend / divisor
+	remainder = dividend % divisor
+	return  // returns quotient and remainder
+}
+
+func main() {
+	fmt.Println(split(17))
+	fmt.Println(divmod(17, 5))
+}</code></pre>
+</div>
+<div class="content-section csharp-section">
+<h2>C# Equivalent</h2>
+<p>C# <strong>does not have</strong> named return values in the same way Go does. The closest equivalents are:</p>
+<p>1. <strong>Named tuple returns</strong> (C# 7.0+): You can name tuple elements, but they're not variables in the function body 2. <strong>Local variables</strong>: You declare local variables and explicitly return them 3. <strong>Out parameters</strong>: An older pattern that's somewhat similar but works differently</p>
+<p>None of these provide the same behavior as Go's named returns, where the names act as both documentation and as actual variables you can use in the function.</p>
+<h3>C# Example</h3>
+<pre><code class="language-csharp">using System;
+
+class Program
+{
+    // Named tuple return (closest to Go's concept)
+    static (int x, int y) Split(int sum)
+    {
+        int x = sum * 4 / 9;
+        int y = sum - x;
+        return (x, y);  // Must explicitly return
+    }
+
+    // Alternative: using named tuple in signature
+    static (int quotient, int remainder) DivMod(int dividend, int divisor)
+    {
+        // These are local variables, not the return names
+        int quotient = dividend / divisor;
+        int remainder = dividend % divisor;
+        return (quotient, remainder);  // Must explicitly return
+    }
+
+    // Old style with out parameters (different concept)
+    static void DivModOut(int dividend, int divisor, out int quotient, out int remainder)
+    {
+        quotient = dividend / divisor;
+        remainder = dividend % divisor;
+        // No return statement needed for out parameters
+    }
+
+    static void Main()
+    {
+        Console.WriteLine(Split(17));
+        Console.WriteLine(DivMod(17, 5));
+        
+        DivModOut(17, 5, out int q, out int r);
+        Console.WriteLine($&quot;({q}, {r})&quot;);
+    }
+}</code></pre>
+</div>
+<div class="content-section key-differences">
+<h2>Key Differences</h2>
+<ul>
+<li><strong>Named Returns as Variables</strong>: Go's named returns are actual variables in the function; C# tuple names are only for the caller</li>
+<li><strong>Naked Returns</strong>: Go supports returning without specifying values; C# always requires explicit return values</li>
+<li><strong>Documentation</strong>: Go's named returns document what's being returned in the signature; C# tuple names do this too but don't create variables</li>
+<li><strong>Out Parameters</strong>: C# has <code>out</code> which passes results through parameters rather than returns; Go doesn't have this concept</li>
+<li><strong>Explicitness</strong>: C# always requires explicit <code>return (x, y)</code>; Go can use naked <code>return</code> with named returns</li>
+<li><strong>Use Case Alignment</strong>: Both approaches aim to document what's being returned, but Go's named returns serve double duty as both documentation and working variables. This is <strong>unique to Go</strong> - C# requires you to explicitly return values. While C#'s named tuples provide similar documentation value, they don't create variables you can use in the function body. For simple functions, this difference is minor; for complex functions, Go's approach can reduce repetition but may harm clarity (thus Go's style guide recommends using naked returns only in short functions).</li>
+</ul>
+</div>
+
+        
+        <div class="page-nav" id="pageNav">
+            <!-- Navigation buttons will be populated by JavaScript -->
+        </div>
+    </main>
+    
+    <script src="../assets/tour.js"></script>
+    <script>
+        // Add page navigation
+        const adjacent = getAdjacentPages();
+        const navContainer = document.getElementById('pageNav');
+        let navHtml = '';
+        
+        if (adjacent.prev) {
+            navHtml += '<a href="' + adjacent.prev.href + '" class="prev">' + adjacent.prev.title + '</a>';
+        } else {
+            navHtml += '<span></span>';
+        }
+        
+        if (adjacent.next) {
+            navHtml += '<a href="' + adjacent.next.href + '" class="next">' + adjacent.next.title + '</a>';
+        }
+        
+        navContainer.innerHTML = navHtml;
+    </script>
+</body>
+</html>

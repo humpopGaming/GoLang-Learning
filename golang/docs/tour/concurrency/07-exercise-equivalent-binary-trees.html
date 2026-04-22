@@ -1,0 +1,162 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise: Equivalent Binary Trees - Go Tour with C# Comparison</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <button class="menu-toggle">☰ Menu</button>
+    
+    <nav class="nav-sidebar">
+        <!-- Navigation will be populated by JavaScript -->
+    </nav>
+    
+    <main class="main-content">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span>/</span>
+            <a href="01-goroutines.html">Concurrency</a>
+            <span>/</span>
+            <span>Exercise: Equivalent Binary Trees</span>
+        </div>
+        
+
+        <div class="content-header">
+            <h1>Exercise: Equivalent Binary Trees</h1>
+            <div class="page-meta">
+                <span class="page-badge section">Concurrency</span>
+                <span class="page-badge page-number">Page 7 of 9</span>
+            </div>
+        </div>
+        
+        <div class="content-section csharp-section">
+<h2>C# Equivalent</h2>
+<p>Exercise</p>
+<p>In C#, you would use async/await with channels or async enumerables:</p>
+<pre><code class="language-csharp">using System;
+using System.Collections.Generic;
+using System.Threading.Channels;
+using System.Threading.Tasks;
+
+class Tree
+{
+    public Tree Left { get; set; }
+    public int Value { get; set; }
+    public Tree Right { get; set; }
+    
+    // Helper to create a test tree
+    public static Tree New(int k)
+    {
+        // Implementation omitted for brevity
+        // Returns a tree with values 1..10 in some structure
+        return null;
+    }
+}
+
+class Program
+{
+    // Walk the tree and send values to channel
+    static async Task Walk(Tree t, ChannelWriter&lt;int&gt; writer)
+    {
+        // TODO: Implement tree traversal
+        // Don't forget to call writer.Complete() when done!
+    }
+    
+    // Helper for recursive traversal
+    static async Task WalkHelper(Tree t, ChannelWriter&lt;int&gt; writer)
+    {
+        if (t == null) return;
+        
+        await WalkHelper(t.Left, writer);
+        await writer.WriteAsync(t.Value);
+        await WalkHelper(t.Right, writer);
+    }
+    
+    // Determine if trees contain same values
+    static async Task&lt;bool&gt; Same(Tree t1, Tree t2)
+    {
+        // TODO: Use Walk to compare trees
+        return false;
+    }
+    
+    static async Task Main()
+    {
+        // Test Walk
+        var channel = Channel.CreateUnbounded&lt;int&gt;();
+        var walkTask = Walk(Tree.New(1), channel.Writer);
+        
+        await foreach (var value in channel.Reader.ReadAllAsync())
+        {
+            Console.WriteLine(value);
+        }
+        
+        await walkTask;
+        
+        // Test Same
+        Console.WriteLine(await Same(Tree.New(1), Tree.New(1))); // true
+        Console.WriteLine(await Same(Tree.New(1), Tree.New(2))); // false
+    }
+}</code></pre>
+<h3>C# Alternative: IAsyncEnumerable</h3>
+<p>A more C#-idiomatic approach using async enumerables:</p>
+<pre><code class="language-csharp">static async IAsyncEnumerable&lt;int&gt; Walk(Tree t)
+{
+    if (t == null) yield break;
+    
+    await foreach (var value in Walk(t.Left))
+        yield return value;
+    
+    yield return t.Value;
+    
+    await foreach (var value in Walk(t.Right))
+        yield return value;
+}
+
+static async Task&lt;bool&gt; Same(Tree t1, Tree t2)
+{
+    var enum1 = Walk(t1).GetAsyncEnumerator();
+    var enum2 = Walk(t2).GetAsyncEnumerator();
+    
+    while (true)
+    {
+        var has1 = await enum1.MoveNextAsync();
+        var has2 = await enum2.MoveNextAsync();
+        
+        if (has1 != has2) return false;
+        if (!has1) return true; // Both ended
+        
+        if (enum1.Current != enum2.Current)
+            return false;
+    }
+}</code></pre>
+</div>
+
+        
+        <div class="page-nav" id="pageNav">
+            <!-- Navigation buttons will be populated by JavaScript -->
+        </div>
+    </main>
+    
+    <script src="../assets/tour.js"></script>
+    <script>
+        // Add page navigation
+        const adjacent = getAdjacentPages();
+        const navContainer = document.getElementById('pageNav');
+        let navHtml = '';
+        
+        if (adjacent.prev) {
+            navHtml += '<a href="' + adjacent.prev.href + '" class="prev">' + adjacent.prev.title + '</a>';
+        } else {
+            navHtml += '<span></span>';
+        }
+        
+        if (adjacent.next) {
+            navHtml += '<a href="' + adjacent.next.href + '" class="next">' + adjacent.next.title + '</a>';
+        }
+        
+        navContainer.innerHTML = navHtml;
+    </script>
+</body>
+</html>

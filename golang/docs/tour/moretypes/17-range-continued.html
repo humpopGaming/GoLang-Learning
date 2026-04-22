@@ -1,0 +1,261 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Range Continued - Go Tour with C# Comparison</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <button class="menu-toggle">☰ Menu</button>
+    
+    <nav class="nav-sidebar">
+        <!-- Navigation will be populated by JavaScript -->
+    </nav>
+    
+    <main class="main-content">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span>/</span>
+            <a href="01-pointers.html">More Types</a>
+            <span>/</span>
+            <span>Range Continued</span>
+        </div>
+        
+
+        <div class="content-header">
+            <h1>Range Continued</h1>
+            <div class="page-meta">
+                <span class="page-badge section">More Types</span>
+                <span class="page-badge page-number">Page 17 of 25</span>
+            </div>
+        </div>
+        
+        <div class="content-section go-section">
+<h2>Go Concept</h2>
+<p>You can <strong>skip the index or value</strong> by assigning to <code>_</code> (blank identifier).</p>
+<pre><code class="language-go">for i, _ := range pow    // skip value
+for _, value := range pow // skip index</code></pre>
+<p>If you only want the index, you can omit the second variable entirely:</p>
+<pre><code class="language-go">for i := range pow</code></pre>
+<h3>Go Example</h3>
+<pre><code class="language-go">package main
+
+import &quot;fmt&quot;
+
+func main() {
+	pow := make([]int, 10)
+	
+	// Only want index - omit value
+	for i := range pow {
+		pow[i] = 1 &lt;&lt; uint(i)  // == 2**i
+	}
+	
+	// Only want value - discard index with _
+	for _, value := range pow {
+		fmt.Printf(&quot;%d\n&quot;, value)
+	}
+}</code></pre>
+<p>Output:</p>
+<pre><code class="language-">1
+2
+4
+8
+16
+32
+64
+128
+256
+512</code></pre>
+</div>
+<div class="content-section csharp-section">
+<h2>C# Equivalent</h2>
+<p>C# doesn't have a direct blank identifier like Go's <code>_</code>. Instead, you:</p>
+<ul>
+<li><strong>Discard value</strong>: Use discard pattern <code>_</code> (C# 7.0+) or just don't declare variable</li>
+<li><strong>Skip index</strong>: Use <code>foreach</code> (no index available by default)</li>
+<li><strong>Need index only</strong>: Use <code>for</code> loop and don't use array value</li>
+</ul>
+<p>C# 7.0+ introduced <strong>discards</strong> (<code>_</code>) similar to Go's blank identifier.</p>
+<h3>C# Example</h3>
+<pre><code class="language-csharp">using System;
+using System.Linq;
+
+class Program
+{
+    static void Main()
+    {
+        int[] pow = new int[10];
+
+        // Only want index - traditional for loop
+        for (int i = 0; i &lt; pow.Length; i++)
+        {
+            pow[i] = 1 &lt;&lt; i;  // == 2**i
+        }
+
+        // Only want value - foreach (no index available)
+        foreach (int value in pow)
+        {
+            Console.WriteLine(value);
+        }
+
+        Console.WriteLine(&quot;\nWith discard patterns:&quot;);
+
+        // Using LINQ Select with discard for index (C# 7.0+)
+        pow.Select((value, _) =&gt; value)
+           .ToList()
+           .ForEach(v =&gt; Console.WriteLine(v));
+
+        // Discard in deconstruction (C# 7.0+)
+        var tuples = pow.Select((value, index) =&gt; (value, index));
+        foreach (var (value, _) in tuples)
+        {
+            Console.WriteLine(value);
+        }
+
+        // If you really want index only (less common)
+        for (int i = 0; i &lt; pow.Length; i++)
+        {
+            // Use i, ignore pow[i]
+            Console.WriteLine($&quot;Index: {i}&quot;);
+        }
+    }
+}</code></pre>
+<p>Output:</p>
+<pre><code class="language-">1
+2
+4
+8
+16
+...</code></pre>
+</div>
+<div class="content-section key-differences">
+<h2>Key Differences</h2>
+<ul>
+<li><strong>Blank Identifier</strong>: Go uses <code>_</code> as true blank identifier; C# <code>_</code> is a discard (similar but newer feature)</li>
+<li><strong>Index-only Syntax</strong>: Go <code>for i := range s</code> is concise; C# requires <code>for (int i = 0; i &lt; s.Length; i++)</code></li>
+<li><strong>Value-only Syntax</strong>: Go <code>for _, v := range s</code>; C# <code>foreach (var v in s)</code> (simpler, no explicit discard)</li>
+<li><strong>Language Age</strong>: Go had <code>_</code> from start; C# added discards in C# 7.0 (2017)</li>
+<li><strong>Compiler Behavior</strong>: Go <code>_</code> doesn't allocate/compute; C# <code>_</code> may still compute (depends on context)</li>
+<li><strong>Use Case Alignment</strong>:</li>
+</ul>
+<p><strong>Skip index (value only)</strong>:</p>
+<pre><code class="language-go">// Go
+for _, value := range items {
+    fmt.Println(value)
+}</code></pre>
+<pre><code class="language-csharp">// C# - simpler, no discard needed
+foreach (var value in items)
+{
+    Console.WriteLine(value);
+}</code></pre>
+<p><strong>Skip value (index only)</strong>:</p>
+<pre><code class="language-go">// Go - very concise
+for i := range items {
+    fmt.Println(i)
+}</code></pre>
+<pre><code class="language-csharp">// C# - more verbose
+for (int i = 0; i &lt; items.Length; i++)
+{
+    Console.WriteLine(i);
+}</code></pre>
+<p><strong>Skip both (just iterate, count, etc.)</strong>:</p>
+<pre><code class="language-go">// Go
+count := 0
+for range items {
+    count++
+}</code></pre>
+<pre><code class="language-csharp">// C# - use Length or Count
+int count = items.Length;  // Or items.Count() for IEnumerable</code></pre>
+<p><strong>Different philosophies</strong>:</p>
+<ul>
+<li><strong>Go</strong>: Uniform <code>range</code> syntax with explicit discards for unneeded values</li>
+<li><strong>C#</strong>: Different constructs for different needs (foreach for values, for for indices)</li>
+</ul>
+<p><strong>Go blank identifier (<code>_</code>) features</strong>:</p>
+<ul>
+<li>Ignores assignment (compiler doesn't complain about unused variables)</li>
+<li>Can be used in multiple contexts (imports, function returns, range)</li>
+<li>Explicitly communicates intent to ignore</li>
+</ul>
+<p><strong>C# discard (<code>_</code>) features</strong> (C# 7.0+):</p>
+<ul>
+<li>Similar to Go's <code>_</code> in many contexts</li>
+<li>Can be used in pattern matching, deconstruction, out parameters</li>
+<li>Newer addition to language</li>
+</ul>
+<p><strong>Before C# 7.0 discards</strong>:</p>
+<pre><code class="language-csharp">// Had to declare and ignore variable
+foreach (var item in items)
+{
+    int unused = item.Id;  // Compiler warning about unused
+}
+
+// Or use underscore as variable name (convention, not language feature)
+foreach (var _ in items)
+{
+    // _variable name convention
+}</code></pre>
+<p><strong>Key insight</strong>: Go's range with blank identifier provides uniform syntax for all iteration patterns. C# optimizes for the common case (foreach for values) but becomes more verbose when you need indices.</p>
+<p><strong>Common Go patterns</strong>:</p>
+<pre><code class="language-go">// Initialize slice based on index only
+for i := range data {
+    data[i] = computeValue(i)
+}
+
+// Count elements (ignore values)
+count := 0
+for range items {
+    count++
+}
+
+// Check if slice is empty (range on empty slice doesn't execute)
+for range items {
+    fmt.Println(&quot;Has items&quot;)
+    break
+}</code></pre>
+<p><strong>C# equivalents</strong> (various patterns):</p>
+<pre><code class="language-csharp">// Initialize array based on index
+for (int i = 0; i &lt; data.Length; i++)
+{
+    data[i] = ComputeValue(i);
+}
+
+// Count elements
+int count = items.Length;  // Direct property access
+
+// Check if has items
+if (items.Length &gt; 0)
+{
+    Console.WriteLine(&quot;Has items&quot;);
+}</code></pre>
+<p>The Go approach emphasizes consistency (one iteration construct with selective ignoring), while C# emphasizes directness (use appropriate property/loop for each need).</p>
+</div>
+
+        
+        <div class="page-nav" id="pageNav">
+            <!-- Navigation buttons will be populated by JavaScript -->
+        </div>
+    </main>
+    
+    <script src="../assets/tour.js"></script>
+    <script>
+        // Add page navigation
+        const adjacent = getAdjacentPages();
+        const navContainer = document.getElementById('pageNav');
+        let navHtml = '';
+        
+        if (adjacent.prev) {
+            navHtml += '<a href="' + adjacent.prev.href + '" class="prev">' + adjacent.prev.title + '</a>';
+        } else {
+            navHtml += '<span></span>';
+        }
+        
+        if (adjacent.next) {
+            navHtml += '<a href="' + adjacent.next.href + '" class="next">' + adjacent.next.title + '</a>';
+        }
+        
+        navContainer.innerHTML = navHtml;
+    </script>
+</body>
+</html>

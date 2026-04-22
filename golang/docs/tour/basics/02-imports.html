@@ -1,0 +1,123 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imports - Go Tour with C# Comparison</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <button class="menu-toggle">☰ Menu</button>
+    
+    <nav class="nav-sidebar">
+        <!-- Navigation will be populated by JavaScript -->
+    </nav>
+    
+    <main class="main-content">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span>/</span>
+            <a href="01-packages.html">Basics</a>
+            <span>/</span>
+            <span>Imports</span>
+        </div>
+        
+
+        <div class="content-header">
+            <h1>Imports</h1>
+            <div class="page-meta">
+                <span class="page-badge section">Basics</span>
+                <span class="page-badge page-number">Page 2 of 16</span>
+            </div>
+        </div>
+        
+        <div class="content-section go-section">
+<h2>Go Concept</h2>
+<p>Go uses the <code>import</code> keyword to bring in other packages. You can write multiple import statements or use a "factored" import statement with parentheses, which is the preferred style.</p>
+<p>Import paths are string literals that specify the location of packages. For standard library packages, these are simple names like "fmt" or "math". For external packages, they're typically URLs like "github.com/user/package".</p>
+<h3>Go Example</h3>
+<pre><code class="language-go">package main
+
+// Multiple import statements (works but not idiomatic)
+import &quot;fmt&quot;
+import &quot;math&quot;
+
+// Factored import (preferred Go style)
+import (
+	&quot;fmt&quot;
+	&quot;math&quot;
+)
+
+func main() {
+	fmt.Printf(&quot;Now you have %g problems.\n&quot;, math.Sqrt(7))
+}</code></pre>
+</div>
+<div class="content-section csharp-section">
+<h2>C# Equivalent</h2>
+<p>C# uses <strong>using directives</strong> to bring namespaces into scope. The syntax is similar, but the underlying mechanism differs:</p>
+<ul>
+<li>C# <code>using</code> statements bring namespace contents into scope</li>
+<li>Go <code>import</code> statements make package identifiers available with their package name prefix</li>
+<li>C# can alias namespaces and types with <code>using</code> aliases</li>
+<li>Go always requires the package name prefix (e.g., <code>fmt.Println</code>) unless you use dot imports (discouraged)</li>
+</ul>
+<p>Both languages support grouping imports for cleaner code.</p>
+<h3>C# Example</h3>
+<pre><code class="language-csharp">using System;
+using System.Math;  // Note: Math is a class, not a namespace
+
+// Or grouped (C# 10+):
+// using System;
+// using static System.Math;  // For static members
+
+namespace MyProgram
+{
+    class Program
+    {
+        static void Main()
+        {
+            // Without 'using static', you need: Math.Sqrt(7)
+            Console.WriteLine($&quot;Now you have {Math.Sqrt(7)} problems.&quot;);
+        }
+    }
+}</code></pre>
+</div>
+<div class="content-section key-differences">
+<h2>Key Differences</h2>
+<ul>
+<li><strong>Prefix Requirements</strong>: Go always requires package prefix (e.g., <code>fmt.Println</code>); C# brings names directly into scope</li>
+<li><strong>Static Imports</strong>: C# has <code>using static</code> for importing static members; Go doesn't have an equivalent</li>
+<li><strong>Import Path Format</strong>: Go uses paths/URLs; C# uses namespace names</li>
+<li><strong>Factored Style</strong>: Both support grouping, but Go strongly prefers the factored import style</li>
+<li><strong>Unused Imports</strong>: Go is strict about unused imports (compile error); C# issues warnings</li>
+<li><strong>Use Case Alignment</strong>: Both reduce typing and organize dependencies, but Go's approach maintains clearer package boundaries</li>
+</ul>
+</div>
+
+        
+        <div class="page-nav" id="pageNav">
+            <!-- Navigation buttons will be populated by JavaScript -->
+        </div>
+    </main>
+    
+    <script src="../assets/tour.js"></script>
+    <script>
+        // Add page navigation
+        const adjacent = getAdjacentPages();
+        const navContainer = document.getElementById('pageNav');
+        let navHtml = '';
+        
+        if (adjacent.prev) {
+            navHtml += '<a href="' + adjacent.prev.href + '" class="prev">' + adjacent.prev.title + '</a>';
+        } else {
+            navHtml += '<span></span>';
+        }
+        
+        if (adjacent.next) {
+            navHtml += '<a href="' + adjacent.next.href + '" class="next">' + adjacent.next.title + '</a>';
+        }
+        
+        navContainer.innerHTML = navHtml;
+    </script>
+</body>
+</html>

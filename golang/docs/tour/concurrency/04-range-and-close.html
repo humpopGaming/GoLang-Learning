@@ -1,0 +1,220 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Range and Close - Go Tour with C# Comparison</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <button class="menu-toggle">☰ Menu</button>
+    
+    <nav class="nav-sidebar">
+        <!-- Navigation will be populated by JavaScript -->
+    </nav>
+    
+    <main class="main-content">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span>/</span>
+            <a href="01-goroutines.html">Concurrency</a>
+            <span>/</span>
+            <span>Range and Close</span>
+        </div>
+        
+
+        <div class="content-header">
+            <h1>Range and Close</h1>
+            <div class="page-meta">
+                <span class="page-badge section">Concurrency</span>
+                <span class="page-badge page-number">Page 4 of 9</span>
+            </div>
+        </div>
+        
+        <div class="content-section go-section">
+<h2>Go Concept</h2>
+<p>Channels can be <strong>closed</strong> to signal that no more values will be sent. Receivers can test whether a channel is closed:</p>
+<pre><code class="language-go">v, ok := &lt;-ch</code></pre>
+<p><code>ok</code> is <code>false</code> if the channel is closed and empty.</p>
+<p>The <code>range</code> loop receives values from a channel repeatedly until it's closed:</p>
+<pre><code class="language-go">for v := range ch {
+    // Use v
+}</code></pre>
+<p><strong>Important rules:</strong></p>
+<ul>
+<li><strong>Only the sender</strong> should close a channel, never the receiver</li>
+<li>Closing is optional; channels don't need to be closed unless the receiver needs to know there are no more values (like terminating a <code>range</code> loop)</li>
+<li>Sending on a closed channel causes a panic</li>
+<li>Receiving from a closed channel returns the zero value immediately</li>
+</ul>
+<h3>Go Example</h3>
+<pre><code class="language-go">package main
+
+import &quot;fmt&quot;
+
+func fibonacci(n int, c chan int) {
+	x, y := 0, 1
+	for i := 0; i &lt; n; i++ {
+		c &lt;- x
+		x, y = y, x+y
+	}
+	close(c) // Signal no more values
+}
+
+func main() {
+	c := make(chan int, 10)
+	go fibonacci(cap(c), c)
+	
+	// Range over channel until it's closed
+	for i := range c {
+		fmt.Println(i)
+	}
+	// Output: 0 1 1 2 3 5 8 13 21 34
+}</code></pre>
+<h3>Testing for Closed Channel</h3>
+<pre><code class="language-go">func main() {
+	c := make(chan int, 2)
+	c &lt;- 1
+	c &lt;- 2
+	close(c)
+	
+	// Receive until closed
+	for {
+		v, ok := &lt;-c
+		if !ok {
+			fmt.Println(&quot;Channel closed&quot;)
+			break
+		}
+		fmt.Println(v)
+	}
+}</code></pre>
+</div>
+<div class="content-section csharp-section">
+<h2>C# Equivalent</h2>
+<p>C# <strong>Channel<T></strong> has <code>Writer.Complete()</code> to signal completion (similar to closing). C# also supports <strong>IAsyncEnumerable<T></strong> and <strong>cancellation tokens</strong> for signaling completion of async operations.</p>
+<p>Key differences:</p>
+<ul>
+<li>Go: <code>close(ch)</code> is a function call</li>
+<li>C#: <code>Writer.Complete()</code> is a method on the writer</li>
+<li>Go: <code>range</code> loops automatically stop on close</li>
+<li>C#: <code>await foreach</code> stops when channel is completed</li>
+<li>Both: Only producers should signal completion</li>
+</ul>
+<h3>C# Example (Channel<T>)</h3>
+<pre><code class="language-csharp">using System;
+using System.Threading.Channels;
+using System.Threading.Tasks;
+
+class Program
+{
+    static async Task Fibonacci(int n, ChannelWriter&lt;int&gt; writer)
+    {
+        int x = 0, y = 1;
+        for (int i = 0; i &lt; n; i++)
+        {
+            await writer.WriteAsync(x);
+            (x, y) = (y, x + y);
+        }
+        writer.Complete(); // Signal no more values
+    }
+
+    static async Task Main()
+    {
+        var channel = Channel.CreateBounded&lt;int&gt;(10);
+        
+        var task = Fibonacci(10, channel.Writer);
+        
+        // Await foreach over channel until it's completed
+        await foreach (var value in channel.Reader.ReadAllAsync())
+        {
+            Console.WriteLine(value);
+        }
+        // Output: 0 1 1 2 3 5 8 13 21 34
+        
+        await task;
+    }
+}</code></pre>
+<h3>Testing for Completed Channel</h3>
+<pre><code class="language-csharp">using System;
+using System.Threading.Channels;
+using System.Threading.Tasks;
+
+class Program
+{
+    static async Task Main()
+    {
+        var channel = Channel.CreateBounded&lt;int&gt;(2);
+        
+        await channel.Writer.WriteAsync(1);
+        await channel.Writer.WriteAsync(2);
+        channel.Writer.Complete();
+        
+        // Read until completed
+        while (await channel.Reader.WaitToReadAsync())
+        {
+            while (channel.Reader.TryRead(out var value))
+            {
+                Console.WriteLine(value);
+            }
+        }
+        Console.WriteLine(&quot;Channel completed&quot;);
+    }
+}</code></pre>
+<h3>C# Example (Using IAsyncEnumerable)</h3>
+<p>C# can also use <strong>async enumerables</strong> to represent streams of data:</p>
+<pre><code class="language-csharp">using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+class Program
+{
+    static async IAsyncEnumerable&lt;int&gt; Fibonacci(int n)
+    {
+        int x = 0, y = 1;
+        for (int i = 0; i &lt; n; i++)
+        {
+            yield return x;
+            await Task.Delay(10); // Simulate async work
+            (x, y) = (y, x + y);
+        }
+        // Completion is automatic when method ends
+    }
+
+    static async Task Main()
+    {
+        await foreach (var value in Fibonacci(10))
+        {
+            Console.WriteLine(value);
+        }
+        // Output: 0 1 1 2 3 5 8 13 21 34
+    }
+}</code></pre>
+</div>
+
+        
+        <div class="page-nav" id="pageNav">
+            <!-- Navigation buttons will be populated by JavaScript -->
+        </div>
+    </main>
+    
+    <script src="../assets/tour.js"></script>
+    <script>
+        // Add page navigation
+        const adjacent = getAdjacentPages();
+        const navContainer = document.getElementById('pageNav');
+        let navHtml = '';
+        
+        if (adjacent.prev) {
+            navHtml += '<a href="' + adjacent.prev.href + '" class="prev">' + adjacent.prev.title + '</a>';
+        } else {
+            navHtml += '<span></span>';
+        }
+        
+        if (adjacent.next) {
+            navHtml += '<a href="' + adjacent.next.href + '" class="next">' + adjacent.next.title + '</a>';
+        }
+        
+        navContainer.innerHTML = navHtml;
+    </script>
+</body>
+</html>

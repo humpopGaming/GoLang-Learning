@@ -1,0 +1,164 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Empty Interface - Go Tour with C# Comparison</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <button class="menu-toggle">☰ Menu</button>
+    
+    <nav class="nav-sidebar">
+        <!-- Navigation will be populated by JavaScript -->
+    </nav>
+    
+    <main class="main-content">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span>/</span>
+            <a href="01-methods.html">Methods</a>
+            <span>/</span>
+            <span>The Empty Interface</span>
+        </div>
+        
+
+        <div class="content-header">
+            <h1>The Empty Interface</h1>
+            <div class="page-meta">
+                <span class="page-badge section">Methods</span>
+                <span class="page-badge page-number">Page 14 of 23</span>
+            </div>
+        </div>
+        
+        <div class="content-section go-section">
+<h2>Go Concept</h2>
+<p>The interface type that specifies zero methods is known as the <strong>empty interface</strong>: <code>interface{}</code>. An empty interface may hold values of any type because every type implements at least zero methods.</p>
+<p>Go 1.18+ introduced <code>any</code> as an alias for <code>interface{}</code>, making code more readable. Empty interfaces are used when you need to handle values of unknown type, such as in fmt.Print functions.</p>
+<h3>Go Example</h3>
+<pre><code class="language-go">package main
+
+import &quot;fmt&quot;
+
+func describe(i interface{}) {
+	fmt.Printf(&quot;(%v, %T)\n&quot;, i, i)
+}
+
+func describeAny(i any) {
+	fmt.Printf(&quot;(%v, %T)\n&quot;, i, i)
+}
+
+func main() {
+	var i interface{}
+	describe(i) // (&lt;nil&gt;, &lt;nil&gt;)
+
+	i = 42
+	describe(i) // (42, int)
+
+	i = &quot;hello&quot;
+	describe(i) // (hello, string)
+	
+	// Using 'any' (Go 1.18+)
+	var a any
+	a = 3.14
+	describeAny(a) // (3.14, float64)
+	
+	a = true
+	describeAny(a) // (true, bool)
+}</code></pre>
+</div>
+<div class="content-section csharp-section">
+<h2>C# Equivalent</h2>
+<p>C# has two similar concepts: 1. <strong>object</strong>: The base type of all types in C#. Any value can be assigned to object (value types are boxed) 2. <strong>dynamic</strong>: A type that bypasses compile-time type checking, resolving member access at runtime</p>
+<p>The <code>object</code> type is closer to Go's empty interface, while <code>dynamic</code> provides more runtime flexibility but with different semantics.</p>
+<h3>C# Example</h3>
+<pre><code class="language-csharp">using System;
+
+class Program
+{
+    static void Describe(object obj)
+    {
+        if (obj == null)
+        {
+            Console.WriteLine(&quot;(null, null)&quot;);
+        }
+        else
+        {
+            Console.WriteLine($&quot;({obj}, {obj.GetType().Name})&quot;);
+        }
+    }
+    
+    static void DescribeDynamic(dynamic d)
+    {
+        // dynamic bypasses compile-time type checking
+        Console.WriteLine($&quot;({d}, {d.GetType().Name})&quot;);
+    }
+    
+    static void Main()
+    {
+        // Using object (most similar to interface{})
+        object i;
+        i = null;
+        Describe(i); // (null, null)
+        
+        i = 42;
+        Describe(i); // (42, Int32)
+        
+        i = &quot;hello&quot;;
+        Describe(i); // (hello, String)
+        
+        // Using dynamic
+        dynamic d = 3.14;
+        DescribeDynamic(d); // (3.14, Double)
+        
+        d = true;
+        DescribeDynamic(d); // (True, Boolean)
+        
+        // dynamic allows runtime method resolution
+        d = &quot;world&quot;;
+        Console.WriteLine(d.ToUpper()); // WORLD - resolved at runtime
+    }
+}</code></pre>
+</div>
+<div class="content-section key-differences">
+<h2>Key Differences</h2>
+<ul>
+<li><strong>Type Representation</strong>: Go <code>interface{}</code> is an interface type; C# <code>object</code> is the base class of all types</li>
+<li><strong>Boxing</strong>: C# boxes value types when assigned to object; Go's interface{} stores values directly</li>
+<li><strong>Type Assertions</strong>: Go uses type assertions (<code>v.(Type)</code>); C# uses casting and pattern matching</li>
+<li><strong>Dynamic Behavior</strong>: Go interface{} is statically typed after assertion; C# <code>dynamic</code> bypasses type checking</li>
+<li><strong>Performance</strong>: Go's type assertions have minimal overhead; C# boxing allocates on heap</li>
+<li><strong>Nil/Null</strong>: Go distinguishes nil interface from interface with nil; C# null object is just null</li>
+<li><strong>Type Checking</strong>: Go requires explicit type assertions; C# object requires casting, dynamic resolves at runtime</li>
+<li><strong>Common Usage</strong>: Both used for generic containers and variadic functions; C# dynamic used for interop scenarios</li>
+<li><strong>Generics</strong>: Modern code in both languages prefers generics; Go 1.18+ and C# generics provide type safety</li>
+</ul>
+</div>
+
+        
+        <div class="page-nav" id="pageNav">
+            <!-- Navigation buttons will be populated by JavaScript -->
+        </div>
+    </main>
+    
+    <script src="../assets/tour.js"></script>
+    <script>
+        // Add page navigation
+        const adjacent = getAdjacentPages();
+        const navContainer = document.getElementById('pageNav');
+        let navHtml = '';
+        
+        if (adjacent.prev) {
+            navHtml += '<a href="' + adjacent.prev.href + '" class="prev">' + adjacent.prev.title + '</a>';
+        } else {
+            navHtml += '<span></span>';
+        }
+        
+        if (adjacent.next) {
+            navHtml += '<a href="' + adjacent.next.href + '" class="next">' + adjacent.next.title + '</a>';
+        }
+        
+        navContainer.innerHTML = navHtml;
+    </script>
+</body>
+</html>

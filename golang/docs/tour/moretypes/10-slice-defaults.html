@@ -1,0 +1,165 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slice Defaults - Go Tour with C# Comparison</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <button class="menu-toggle">☰ Menu</button>
+    
+    <nav class="nav-sidebar">
+        <!-- Navigation will be populated by JavaScript -->
+    </nav>
+    
+    <main class="main-content">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span>/</span>
+            <a href="01-pointers.html">More Types</a>
+            <span>/</span>
+            <span>Slice Defaults</span>
+        </div>
+        
+
+        <div class="content-header">
+            <h1>Slice Defaults</h1>
+            <div class="page-meta">
+                <span class="page-badge section">More Types</span>
+                <span class="page-badge page-number">Page 10 of 25</span>
+            </div>
+        </div>
+        
+        <div class="content-section go-section">
+<h2>Go Concept</h2>
+<p>When slicing, you may <strong>omit the high or low bounds</strong> to use their defaults.</p>
+<ul>
+<li>Default low bound: <code>0</code></li>
+<li>Default high bound: length of the sliced array/slice</li>
+</ul>
+<p>These expressions are equivalent:</p>
+<pre><code class="language-go">a[0:10]
+a[:10]
+a[0:]
+a[:]</code></pre>
+<h3>Go Example</h3>
+<pre><code class="language-go">package main
+
+import &quot;fmt&quot;
+
+func main() {
+	s := []int{2, 3, 5, 7, 11, 13}
+
+	s = s[1:4]
+	fmt.Println(s)  // [3 5 7]
+
+	s = s[:2]       // equivalent to s[0:2]
+	fmt.Println(s)  // [3 5]
+
+	s = s[1:]       // equivalent to s[1:len(s)]
+	fmt.Println(s)  // [5]
+
+	// Back to full slice
+	s = []int{2, 3, 5, 7, 11, 13}
+	s = s[:]        // equivalent to s[0:len(s)] - full slice
+	fmt.Println(s)  // [2 3 5 7 11 13]
+}</code></pre>
+</div>
+<div class="content-section csharp-section">
+<h2>C# Equivalent</h2>
+<p>C# has <strong>range operators</strong> (<code>..</code>) introduced in C# 8.0 that provide similar default behavior:</p>
+<ul>
+<li><code>array[..5]</code> � from start to index 5</li>
+<li><code>array[2..]</code> � from index 2 to end</li>
+<li><code>array[..]</code> � full range</li>
+</ul>
+<p>These work with arrays, spans, strings, and other types supporting ranges.</p>
+<h3>C# Example</h3>
+<pre><code class="language-csharp">using System;
+
+class Program
+{
+    static void Main()
+    {
+        int[] s = { 2, 3, 5, 7, 11, 13 };
+
+        // Using Range operator (..)
+        Span&lt;int&gt; slice = s.AsSpan()[1..4];  // [3 5 7]
+        Console.WriteLine(string.Join(&quot; &quot;, slice.ToArray()));
+
+        slice = slice[..2];  // equivalent to [0..2]
+        Console.WriteLine(string.Join(&quot; &quot;, slice.ToArray()));  // [3 5]
+
+        slice = slice[1..];  // from index 1 to end
+        Console.WriteLine(string.Join(&quot; &quot;, slice.ToArray()));  // [5]
+
+        // Back to full array
+        s = new int[] { 2, 3, 5, 7, 11, 13 };
+        slice = s.AsSpan()[..];  // full range
+        Console.WriteLine(string.Join(&quot; &quot;, slice.ToArray()));  // [2 3 5 7 11 13]
+
+        // Alternative: array slicing returns new arrays (C# 8.0+)
+        int[] arr = { 2, 3, 5, 7, 11, 13 };
+        int[] sub1 = arr[1..4];
+        int[] sub2 = arr[..3];
+        int[] sub3 = arr[2..];
+        Console.WriteLine(string.Join(&quot; &quot;, sub1));  // 3 5 7
+        Console.WriteLine(string.Join(&quot; &quot;, sub2));  // 2 3 5
+        Console.WriteLine(string.Join(&quot; &quot;, sub3));  // 5 7 11 13
+    }
+}</code></pre>
+</div>
+<div class="content-section key-differences">
+<h2>Key Differences</h2>
+<ul>
+<li><strong>Syntax Similarity</strong>: Go uses <code>[:]</code>, C# uses <code>[..]</code> � very similar concepts</li>
+<li><strong>Default Bounds</strong>: Both allow omitting start or end for defaults (0 and length)</li>
+<li><strong>Range Operator</strong>: C# <code>..</code> is more recent (C# 8.0+); Go slicing is original feature</li>
+<li><strong>Copy vs View</strong>: C# array slicing <code>arr[1..4]</code> creates new array; <code>span[1..4]</code> creates view (Go slices are views)</li>
+<li><strong>Type System</strong>: Go ranges work on arrays/slices; C# ranges work on arrays/spans/strings/custom types with indexers</li>
+<li><strong>Use Case Alignment</strong>: Both provide convenient defaults for common slicing patterns.</li>
+</ul>
+<p><strong>Syntax comparison</strong>: | Operation | Go | C# (Span/Array) | |-----------|-------|-----------------| | First n elements | <code>s[:n]</code> | <code>s[..n]</code> | | From index i to end | <code>s[i:]</code> | <code>s[i..]</code> | | Full range | <code>s[:]</code> | <code>s[..]</code> | | Middle section | <code>s[i:j]</code> | <code>s[i..j]</code> |</p>
+<p><strong>Different implementations</strong>:</p>
+<ul>
+<li><strong>Go</strong>: Built-in slice syntax from day one, always creates views</li>
+<li><strong>C#</strong>: Range operator added in C# 8.0, behavior depends on type:</li>
+<li>Arrays: creates new array (copy)</li>
+<li>Span<T>: creates view (no copy)</li>
+</ul>
+<p><strong>Key insight</strong>: The syntax is remarkably similar, showing convergent evolution. However:</p>
+<ul>
+<li><strong>Go slicing</strong> is built-in, ubiquitous, and always efficient (views)</li>
+<li><strong>C# ranges</strong> are newer, require specific types, and may copy (arrays) or view (spans)</li>
+</ul>
+<p>For everyday C# code, you'd use ranges with arrays (which copies) or explicitly use <code>Span&lt;T&gt;</code> for view behavior. Go's approach is simpler � slicing always creates efficient views.</p>
+</div>
+
+        
+        <div class="page-nav" id="pageNav">
+            <!-- Navigation buttons will be populated by JavaScript -->
+        </div>
+    </main>
+    
+    <script src="../assets/tour.js"></script>
+    <script>
+        // Add page navigation
+        const adjacent = getAdjacentPages();
+        const navContainer = document.getElementById('pageNav');
+        let navHtml = '';
+        
+        if (adjacent.prev) {
+            navHtml += '<a href="' + adjacent.prev.href + '" class="prev">' + adjacent.prev.title + '</a>';
+        } else {
+            navHtml += '<span></span>';
+        }
+        
+        if (adjacent.next) {
+            navHtml += '<a href="' + adjacent.next.href + '" class="next">' + adjacent.next.title + '</a>';
+        }
+        
+        navContainer.innerHTML = navHtml;
+    </script>
+</body>
+</html>

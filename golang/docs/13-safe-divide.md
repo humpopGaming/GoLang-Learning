@@ -15,10 +15,10 @@ Build a "safe divide" function that returns errors for invalid inputs, practisin
 
 ## Tour Reference — Read These First
 
-1. [Type assertions](https://go.dev/tour/methods/15) — Extract concrete type from an interface value
-2. [Type switches](https://go.dev/tour/methods/16) — Switch on the type of an interface value
-3. [Errors](https://go.dev/tour/methods/19) — The `error` interface and how Go handles errors
-4. [Exercise: Errors](https://go.dev/tour/methods/20) — Example of custom error types
+1. [Type Assertions](tour/methods/15-type-assertions.html) — Extract concrete type from an interface value
+2. [Type Switches](tour/methods/16-type-switches.html) — Switch on the type of an interface value
+3. [Errors](tour/methods/19-errors.html) — The `error` interface and how Go handles errors
+4. [Exercise: Errors](tour/methods/20-exercise-errors.html) — Example of custom error types
 
 ## What to Build
 

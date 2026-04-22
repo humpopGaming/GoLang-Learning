@@ -1,0 +1,253 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Function Closures - Go Tour with C# Comparison</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <button class="menu-toggle">☰ Menu</button>
+    
+    <nav class="nav-sidebar">
+        <!-- Navigation will be populated by JavaScript -->
+    </nav>
+    
+    <main class="main-content">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span>/</span>
+            <a href="01-pointers.html">More Types</a>
+            <span>/</span>
+            <span>Function Closures</span>
+        </div>
+        
+
+        <div class="content-header">
+            <h1>Function Closures</h1>
+            <div class="page-meta">
+                <span class="page-badge section">More Types</span>
+                <span class="page-badge page-number">Page 25 of 25</span>
+            </div>
+        </div>
+        
+        <div class="content-section go-section">
+<h2>Go Concept</h2>
+<p>Go functions may be <strong>closures</strong>. A closure is a function value that <strong>references variables from outside its body</strong>. The function may access and assign to the referenced variables; in this sense the function is "bound" to the variables.</p>
+<ul>
+<li>Closures capture variables from their surrounding scope</li>
+<li>The captured variables are shared between the closure and its enclosing function</li>
+<li>Each closure maintains its own captured state</li>
+<li>Closures enable data encapsulation and factory patterns</li>
+</ul>
+<h3>Go Example</h3>
+<pre><code class="language-go">package main
+
+import &quot;fmt&quot;
+
+func adder() func(int) int {
+	sum := 0
+	return func(x int) int {
+		sum += x  // Captures and modifies 'sum'
+		return sum
+	}
+}
+
+func main() {
+	pos, neg := adder(), adder()  // Two independent closures
+	
+	for i := 0; i &lt; 10; i++ {
+		fmt.Println(
+			pos(i),    // Each closure has its own 'sum'
+			neg(-2*i),
+		)
+	}
+}</code></pre>
+<p>Output:</p>
+<pre><code class="language-">0 0
+1 -2
+3 -6
+6 -12
+10 -20
+15 -30
+21 -42
+28 -56
+36 -72
+45 -90</code></pre>
+<p><strong>Key concepts</strong>:</p>
+<ul>
+<li><code>sum</code> is captured by the returned function</li>
+<li>Each call to <code>adder()</code> creates a new closure with its own <code>sum</code></li>
+<li>The closure maintains state between calls</li>
+</ul>
+</div>
+<div class="content-section csharp-section">
+<h2>C# Equivalent</h2>
+<p>C# <strong>lambda expressions capture variables</strong> from their surrounding scope, creating closures:</p>
+<ul>
+<li>Lambda expressions automatically capture variables from enclosing scope</li>
+<li>Captured variables are shared (same reference) with enclosing method</li>
+<li>Each closure instance maintains its own captured state</li>
+<li>Both value and reference types can be captured</li>
+</ul>
+<h3>C# Example</h3>
+<pre><code class="language-csharp">using System;
+
+class Program
+{
+    static Func&lt;int, int&gt; Adder()
+    {
+        int sum = 0;
+        return x =&gt;
+        {
+            sum += x;  // Captures and modifies 'sum'
+            return sum;
+        };
+    }
+
+    static void Main()
+    {
+        var pos = Adder();  // Two independent closures
+        var neg = Adder();
+        
+        for (int i = 0; i &lt; 10; i++)
+        {
+            Console.WriteLine($&quot;{pos(i)} {neg(-2 * i)}&quot;);
+        }
+
+        // Demonstrating closure behavior
+        Console.WriteLine(&quot;\nClosure captures by reference:&quot;);
+        int counter = 0;
+        Action increment = () =&gt; counter++;
+        Action decrement = () =&gt; counter--;
+        
+        increment();
+        increment();
+        Console.WriteLine(counter);  // 2
+        decrement();
+        Console.WriteLine(counter);  // 1
+
+        // Multiple closures sharing the same variable
+        Console.WriteLine(&quot;\nShared variable capture:&quot;);
+        int shared = 0;
+        var inc1 = new Func&lt;int&gt;(() =&gt; ++shared);
+        var inc2 = new Func&lt;int&gt;(() =&gt; ++shared);
+        
+        Console.WriteLine(inc1());  // 1
+        Console.WriteLine(inc2());  // 2
+        Console.WriteLine(inc1());  // 3
+    }
+}</code></pre>
+<p>Output:</p>
+<pre><code class="language-">0 0
+1 -2
+3 -6
+6 -12
+10 -20
+15 -30
+21 -42
+28 -56
+36 -72
+45 -90
+
+Closure captures by reference:
+2
+1
+
+Shared variable capture:
+1
+2
+3</code></pre>
+</div>
+<div class="content-section key-differences">
+<h2>Key Differences</h2>
+<ul>
+<li><strong>Syntax</strong>: Go uses <code>func</code> keyword; C# uses <code>=&gt;</code> lambda operator</li>
+<li><strong>Capture Semantics</strong>: Both capture by reference (can modify original variables)</li>
+<li><strong>Type Declaration</strong>: Go infers return function type; C# uses <code>Func&lt;&gt;</code> or <code>Action&lt;&gt;</code></li>
+<li><strong>Scope Rules</strong>: Both capture variables from enclosing scope with same semantics</li>
+<li><strong>Multiple Closures</strong>: Both allow multiple independent closures from same factory function</li>
+<li><strong>Loop Variable Capture</strong>: Both have similar gotchas with loop variables (C# fixed in C# 5)</li>
+<li><strong>Memory Management</strong>: Both keep captured variables alive (garbage collected)</li>
+<li><strong>Performance</strong>: Both have similar overhead (closure objects allocated on heap)</li>
+</ul>
+<p><strong>Different philosophies</strong>:</p>
+<ul>
+<li>Go: Explicit <code>func</code> keyword, straightforward closure syntax</li>
+<li>C#: Concise lambda <code>=&gt;</code> syntax, integrated with delegate types</li>
+</ul>
+<p><strong>Common patterns</strong>:</p>
+<p>Go factory pattern:</p>
+<pre><code class="language-go">func makeMultiplier(factor int) func(int) int {
+    return func(x int) int {
+        return x * factor
+    }
+}</code></pre>
+<p>C# factory pattern:</p>
+<pre><code class="language-csharp">Func&lt;int, int&gt; MakeMultiplier(int factor)
+{
+    return x =&gt; x * factor;
+}</code></pre>
+<p><strong>Important gotcha (both languages)</strong>:</p>
+<p>Loop variable capture problem:</p>
+<pre><code class="language-go">// Go - WRONG
+funcs := []func(){}
+for i := 0; i &lt; 3; i++ {
+    funcs = append(funcs, func() {
+        fmt.Println(i)  // Captures the loop variable!
+    })
+}
+// All print 3!
+
+// Go - CORRECT
+for i := 0; i &lt; 3; i++ {
+    i := i  // Create new variable for each iteration
+    funcs = append(funcs, func() {
+        fmt.Println(i)
+    })
+}</code></pre>
+<pre><code class="language-csharp">// C# - Fixed in C# 5+, but similar issue with foreach
+List&lt;Action&gt; funcs = new List&lt;Action&gt;();
+for (int i = 0; i &lt; 3; i++)
+{
+    int localI = i;  // Capture local copy
+    funcs.Add(() =&gt; Console.WriteLine(localI));
+}</code></pre>
+<p><strong>Use cases</strong>:</p>
+<ul>
+<li><strong>Event handlers</strong>: Capture context for callbacks</li>
+<li><strong>Factory functions</strong>: Create customized functions</li>
+<li><strong>Iterators</strong>: Maintain state across calls</li>
+<li><strong>Encapsulation</strong>: Hide implementation details</li>
+<li><strong>Partial application</strong>: Bind some arguments, return function for remaining ones</li>
+</ul>
+<p>Both languages handle closures similarly with nearly identical semantics. The main difference is syntax � Go's explicit <code>func</code> keyword vs C#'s concise <code>=&gt;</code> operator. The underlying behavior, use cases, and gotchas are remarkably similar.</p>
+</div>
+
+        
+        <div class="page-nav" id="pageNav">
+            <!-- Navigation buttons will be populated by JavaScript -->
+        </div>
+    </main>
+    
+    <script src="../assets/tour.js"></script>
+    <script>
+        // Add page navigation
+        const adjacent = getAdjacentPages();
+        const navContainer = document.getElementById('pageNav');
+        let navHtml = '';
+        
+        if (adjacent.prev) {
+            navHtml += '<a href="' + adjacent.prev.href + '" class="prev">' + adjacent.prev.title + '</a>';
+        } else {
+            navHtml += '<span></span>';
+        }
+        
+        if (adjacent.next) {
+            navHtml += '<a href="' + adjacent.next.href + '" class="next">' + adjacent.next.title + '</a>';
+        }
+        
+        navContainer.innerHTML = navHtml;
+    </script>
+</body>
+</html>

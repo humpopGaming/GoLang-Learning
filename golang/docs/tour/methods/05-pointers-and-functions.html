@@ -1,0 +1,175 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pointers and Functions - Go Tour with C# Comparison</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <button class="menu-toggle">☰ Menu</button>
+    
+    <nav class="nav-sidebar">
+        <!-- Navigation will be populated by JavaScript -->
+    </nav>
+    
+    <main class="main-content">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span>/</span>
+            <a href="01-methods.html">Methods</a>
+            <span>/</span>
+            <span>Pointers and Functions</span>
+        </div>
+        
+
+        <div class="content-header">
+            <h1>Pointers and Functions</h1>
+            <div class="page-meta">
+                <span class="page-badge section">Methods</span>
+                <span class="page-badge page-number">Page 5 of 23</span>
+            </div>
+        </div>
+        
+        <div class="content-section go-section">
+<h2>Go Concept</h2>
+<p>When comparing methods with pointer receivers to functions with pointer parameters, the behavior is identical. A function with a pointer parameter must receive a pointer argument, while methods with pointer receivers can be called on either a pointer or a value (Go handles the conversion automatically).</p>
+<p>This demonstrates the relationship between Go's method syntax and its underlying function mechanics.</p>
+<h3>Go Example</h3>
+<pre><code class="language-go">package main
+
+import (
+	&quot;fmt&quot;
+	&quot;math&quot;
+)
+
+type Vertex struct {
+	X, Y float64
+}
+
+// Function with pointer parameter
+func ScaleFunc(v *Vertex, f float64) {
+	v.X = v.X * f
+	v.Y = v.Y * f
+}
+
+// Function with value parameter
+func AbsFunc(v Vertex) float64 {
+	return math.Sqrt(v.X*v.X + v.Y*v.Y)
+}
+
+// Method with pointer receiver
+func (v *Vertex) Scale(f float64) {
+	v.X = v.X * f
+	v.Y = v.Y * f
+}
+
+// Method with value receiver
+func (v Vertex) Abs() float64 {
+	return math.Sqrt(v.X*v.X + v.Y*v.Y)
+}
+
+func main() {
+	v := Vertex{3, 4}
+	ScaleFunc(&amp;v, 10)      // Must pass pointer to function
+	fmt.Println(AbsFunc(v)) // Output: 50
+	
+	v = Vertex{3, 4}
+	v.Scale(10)            // Method works with value (Go converts automatically)
+	fmt.Println(v.Abs())   // Output: 50
+}</code></pre>
+</div>
+<div class="content-section csharp-section">
+<h2>C# Equivalent</h2>
+<p>C# uses <strong>ref</strong> and <strong>out</strong> parameters to pass value types by reference, and <strong>in</strong> for readonly references. For reference types (classes), you always pass a reference to the object. C# does not automatically convert between value and reference passing - you must be explicit.</p>
+<h3>C# Example</h3>
+<pre><code class="language-csharp">using System;
+
+public struct Vertex
+{
+    public double X { get; set; }
+    public double Y { get; set; }
+    
+    // Instance method that modifies the struct
+    public void Scale(double f)
+    {
+        X *= f;
+        Y *= f;
+    }
+    
+    public readonly double Abs()
+    {
+        return Math.Sqrt(X * X + Y * Y);
+    }
+}
+
+public static class VertexFunctions
+{
+    // Function with ref parameter (pass by reference)
+    public static void ScaleFunc(ref Vertex v, double f)
+    {
+        v.X *= f;
+        v.Y *= f;
+    }
+    
+    // Function with value parameter (pass by value)
+    public static double AbsFunc(Vertex v)
+    {
+        return Math.Sqrt(v.X * v.X + v.Y * v.Y);
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        var v = new Vertex { X = 3, Y = 4 };
+        VertexFunctions.ScaleFunc(ref v, 10); // Must use 'ref' keyword
+        Console.WriteLine(VertexFunctions.AbsFunc(v)); // Output: 50
+        
+        v = new Vertex { X = 3, Y = 4 };
+        v.Scale(10); // Method mutates the struct in place
+        Console.WriteLine(v.Abs()); // Output: 50
+    }
+}</code></pre>
+</div>
+<div class="content-section key-differences">
+<h2>Key Differences</h2>
+<ul>
+<li><strong>Automatic Conversion</strong>: Go methods auto-convert <code>v.Scale()</code> to <code>(&amp;v).Scale()</code>; C# requires explicit <code>ref</code> keyword</li>
+<li><strong>Function Call Syntax</strong>: Go functions require <code>&amp;v</code>; C# requires <code>ref v</code> at call site</li>
+<li><strong>Method Convenience</strong>: Go methods handle pointer/value automatically; C# struct methods work on the struct directly</li>
+<li><strong>Reference Types</strong>: C# classes always pass references; Go must explicitly use pointers</li>
+<li><strong>Syntactic Sugar</strong>: Go's method syntax provides convenience; C# makes the distinction explicit everywhere</li>
+<li><strong>Safety</strong>: C# <code>ref</code> at call site makes mutation visible; Go's auto-conversion is more convenient but less explicit</li>
+<li><strong>Out Parameters</strong>: C# has <code>out</code> for output-only parameters; Go returns multiple values instead</li>
+</ul>
+</div>
+
+        
+        <div class="page-nav" id="pageNav">
+            <!-- Navigation buttons will be populated by JavaScript -->
+        </div>
+    </main>
+    
+    <script src="../assets/tour.js"></script>
+    <script>
+        // Add page navigation
+        const adjacent = getAdjacentPages();
+        const navContainer = document.getElementById('pageNav');
+        let navHtml = '';
+        
+        if (adjacent.prev) {
+            navHtml += '<a href="' + adjacent.prev.href + '" class="prev">' + adjacent.prev.title + '</a>';
+        } else {
+            navHtml += '<span></span>';
+        }
+        
+        if (adjacent.next) {
+            navHtml += '<a href="' + adjacent.next.href + '" class="next">' + adjacent.next.title + '</a>';
+        }
+        
+        navContainer.innerHTML = navHtml;
+    </script>
+</body>
+</html>

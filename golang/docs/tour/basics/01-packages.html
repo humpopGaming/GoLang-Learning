@@ -1,0 +1,115 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Packages - Go Tour with C# Comparison</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <button class="menu-toggle">☰ Menu</button>
+    
+    <nav class="nav-sidebar">
+        <!-- Navigation will be populated by JavaScript -->
+    </nav>
+    
+    <main class="main-content">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span>/</span>
+            <a href="01-packages.html">Basics</a>
+            <span>/</span>
+            <span>Packages</span>
+        </div>
+        
+
+        <div class="content-header">
+            <h1>Packages</h1>
+            <div class="page-meta">
+                <span class="page-badge section">Basics</span>
+                <span class="page-badge page-number">Page 1 of 16</span>
+            </div>
+        </div>
+        
+        <div class="content-section go-section">
+<h2>Go Concept</h2>
+<p>Every Go program is made up of packages. Programs start running in package <code>main</code>. The package declaration at the top of a file determines which package the code belongs to.</p>
+<p>Packages provide modularity and code organization. By convention, the package name is the same as the last element of the import path. For instance, the "math/rand" package comprises files that begin with <code>package rand</code>.</p>
+<h3>Go Example</h3>
+<pre><code class="language-go">package main
+
+import (
+	&quot;fmt&quot;
+	&quot;math/rand&quot;
+)
+
+func main() {
+	fmt.Println(&quot;My favorite number is&quot;, rand.Intn(10))
+}</code></pre>
+</div>
+<div class="content-section csharp-section">
+<h2>C# Equivalent</h2>
+<p>C# uses <strong>namespaces</strong> to organize code, which serve a similar purpose to Go packages. However, there are important differences in how they work:</p>
+<ul>
+<li>In C#, namespaces are purely for logical organization and name scoping</li>
+<li>In Go, packages are the unit of compilation and encapsulation</li>
+<li>C# has separate concepts for assemblies (compilation units) and namespaces (organization)</li>
+<li>Go's package system is simpler: one package = one compilation unit</li>
+</ul>
+<p>The entry point in C# is typically a <code>Main</code> method in any class, though modern C# (9.0+) supports top-level statements similar to Go's approach.</p>
+<h3>C# Example</h3>
+<pre><code class="language-csharp">using System;
+
+namespace MyProgram
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine(&quot;My favorite number is &quot; + Random.Shared.Next(10));
+        }
+    }
+}
+
+// Or with C# 9.0+ top-level statements:
+// using System;
+// Console.WriteLine(&quot;My favorite number is &quot; + Random.Shared.Next(10));</code></pre>
+</div>
+<div class="content-section key-differences">
+<h2>Key Differences</h2>
+<ul>
+<li><strong>Package vs Namespace</strong>: Go packages are compilation units; C# namespaces are just naming constructs</li>
+<li><strong>Main Entry Point</strong>: Go requires <code>package main</code> and a <code>main()</code> function; C# requires a <code>Main</code> method (or top-level statements)</li>
+<li><strong>File Organization</strong>: All files in a Go directory must be in the same package; C# files can contain multiple namespaces</li>
+<li><strong>Visibility</strong>: Go uses capitalization for exports; C# uses explicit <code>public</code>/<code>private</code> keywords</li>
+<li><strong>Use Case Alignment</strong>: Both organize code and prevent naming conflicts, but Go's packages are more tightly coupled to the build system</li>
+</ul>
+</div>
+
+        
+        <div class="page-nav" id="pageNav">
+            <!-- Navigation buttons will be populated by JavaScript -->
+        </div>
+    </main>
+    
+    <script src="../assets/tour.js"></script>
+    <script>
+        // Add page navigation
+        const adjacent = getAdjacentPages();
+        const navContainer = document.getElementById('pageNav');
+        let navHtml = '';
+        
+        if (adjacent.prev) {
+            navHtml += '<a href="' + adjacent.prev.href + '" class="prev">' + adjacent.prev.title + '</a>';
+        } else {
+            navHtml += '<span></span>';
+        }
+        
+        if (adjacent.next) {
+            navHtml += '<a href="' + adjacent.next.href + '" class="next">' + adjacent.next.title + '</a>';
+        }
+        
+        navContainer.innerHTML = navHtml;
+    </script>
+</body>
+</html>

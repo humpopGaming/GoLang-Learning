@@ -1,0 +1,147 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise: rot13Reader - Go Tour with C# Comparison</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <button class="menu-toggle">☰ Menu</button>
+    
+    <nav class="nav-sidebar">
+        <!-- Navigation will be populated by JavaScript -->
+    </nav>
+    
+    <main class="main-content">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span>/</span>
+            <a href="01-methods.html">Methods</a>
+            <span>/</span>
+            <span>Exercise: rot13Reader</span>
+        </div>
+        
+
+        <div class="content-header">
+            <h1>Exercise: rot13Reader</h1>
+            <div class="page-meta">
+                <span class="page-badge section">Methods</span>
+                <span class="page-badge page-number">Page 23 of 23</span>
+            </div>
+        </div>
+        
+        <div class="content-section csharp-section">
+<h2>C# Equivalent</h2>
+<p>Exercise</p>
+<pre><code class="language-csharp">using System;
+using System.IO;
+using System.Text;
+
+// Implement a Stream that wraps another Stream and applies ROT13
+class Rot13Stream : Stream
+{
+    private readonly Stream innerStream;
+    
+    public Rot13Stream(Stream stream)
+    {
+        innerStream = stream;
+    }
+    
+    private static byte Rot13(byte b)
+    {
+        // TODO: Implement ROT13 transformation
+        return b;
+    }
+    
+    public override int Read(byte[] buffer, int offset, int count)
+    {
+        // TODO: Read from innerStream, apply ROT13, write to buffer
+        return 0;
+    }
+    
+    // Required Stream members
+    public override bool CanRead =&gt; innerStream.CanRead;
+    public override bool CanSeek =&gt; false;
+    public override bool CanWrite =&gt; false;
+    public override long Length =&gt; throw new NotSupportedException();
+    public override long Position 
+    { 
+        get =&gt; throw new NotSupportedException(); 
+        set =&gt; throw new NotSupportedException(); 
+    }
+    
+    public override void Flush() =&gt; innerStream.Flush();
+    public override long Seek(long offset, SeekOrigin origin) =&gt; throw new NotSupportedException();
+    public override void SetLength(long value) =&gt; throw new NotSupportedException();
+    public override void Write(byte[] buffer, int offset, int count) =&gt; throw new NotSupportedException();
+    
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+            innerStream?.Dispose();
+        base.Dispose(disposing);
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        byte[] data = Encoding.ASCII.GetBytes(&quot;Lbh penpxrq gur pbqr!&quot;);
+        using var source = new MemoryStream(data);
+        using var rot13 = new Rot13Stream(source);
+        using var reader = new StreamReader(rot13);
+        
+        Console.WriteLine(reader.ReadToEnd());
+        // Should output: You cracked the code!
+    }
+}</code></pre>
+<p><strong>C# Solution:</strong></p>
+<pre><code class="language-csharp">private static byte Rot13(byte b)
+{
+    if (b &gt;= 'A' &amp;&amp; b &lt;= 'Z')
+        return (byte)('A' + (b - 'A' + 13) % 26);
+    if (b &gt;= 'a' &amp;&amp; b &lt;= 'z')
+        return (byte)('a' + (b - 'a' + 13) % 26);
+    return b;
+}
+
+public override int Read(byte[] buffer, int offset, int count)
+{
+    int bytesRead = innerStream.Read(buffer, offset, count);
+    for (int i = 0; i &lt; bytesRead; i++)
+    {
+        buffer[offset + i] = Rot13(buffer[offset + i]);
+    }
+    return bytesRead;
+}</code></pre>
+</div>
+
+        
+        <div class="page-nav" id="pageNav">
+            <!-- Navigation buttons will be populated by JavaScript -->
+        </div>
+    </main>
+    
+    <script src="../assets/tour.js"></script>
+    <script>
+        // Add page navigation
+        const adjacent = getAdjacentPages();
+        const navContainer = document.getElementById('pageNav');
+        let navHtml = '';
+        
+        if (adjacent.prev) {
+            navHtml += '<a href="' + adjacent.prev.href + '" class="prev">' + adjacent.prev.title + '</a>';
+        } else {
+            navHtml += '<span></span>';
+        }
+        
+        if (adjacent.next) {
+            navHtml += '<a href="' + adjacent.next.href + '" class="next">' + adjacent.next.title + '</a>';
+        }
+        
+        navContainer.innerHTML = navHtml;
+    </script>
+</body>
+</html>

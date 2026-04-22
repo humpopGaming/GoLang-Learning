@@ -1,0 +1,213 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appending to a Slice - Go Tour with C# Comparison</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <button class="menu-toggle">☰ Menu</button>
+    
+    <nav class="nav-sidebar">
+        <!-- Navigation will be populated by JavaScript -->
+    </nav>
+    
+    <main class="main-content">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span>/</span>
+            <a href="01-pointers.html">More Types</a>
+            <span>/</span>
+            <span>Appending to a Slice</span>
+        </div>
+        
+
+        <div class="content-header">
+            <h1>Appending to a Slice</h1>
+            <div class="page-meta">
+                <span class="page-badge section">More Types</span>
+                <span class="page-badge page-number">Page 15 of 25</span>
+            </div>
+        </div>
+        
+        <div class="content-section go-section">
+<h2>Go Concept</h2>
+<p>The <strong>append</strong> function adds elements to a slice. If the slice's capacity is too small, a new, larger array is allocated automatically.</p>
+<p><code>func append(s []T, vs ...T) []T</code></p>
+<p>The first parameter is a slice, followed by elements to append. The result is a new slice containing all elements (may reference new underlying array).</p>
+<h3>Go Example</h3>
+<pre><code class="language-go">package main
+
+import &quot;fmt&quot;
+
+func main() {
+	var s []int
+	printSlice(s)
+
+	// append works on nil slices
+	s = append(s, 0)
+	printSlice(s)
+
+	// The slice grows as needed
+	s = append(s, 1)
+	printSlice(s)
+
+	// We can add more than one element at a time
+	s = append(s, 2, 3, 4)
+	printSlice(s)
+}
+
+func printSlice(s []int) {
+	fmt.Printf(&quot;len=%d cap=%d %v\n&quot;, len(s), cap(s), s)
+}</code></pre>
+<p>Output:</p>
+<pre><code class="language-">len=0 cap=0 []
+len=1 cap=1 [0]
+len=2 cap=2 [0 1]
+len=5 cap=6 [0 1 2 3 4]</code></pre>
+</div>
+<div class="content-section csharp-section">
+<h2>C# Equivalent</h2>
+<p>C# uses <strong>List<T>.Add()</strong> and <strong>List<T>.AddRange()</strong> for dynamic growth:</p>
+<ul>
+<li><code>List&lt;T&gt;.Add(item)</code> � add single element</li>
+<li><code>List&lt;T&gt;.AddRange(items)</code> � add multiple elements</li>
+<li>Arrays are fixed-size (no append)</li>
+</ul>
+<p>List<T> automatically grows capacity when needed (typically doubles).</p>
+<h3>C# Example</h3>
+<pre><code class="language-csharp">using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        List&lt;int&gt; s = new List&lt;int&gt;();
+        PrintList(s);
+
+        // Add single element
+        s.Add(0);
+        PrintList(s);
+
+        // Add another element
+        s.Add(1);
+        PrintList(s);
+
+        // Add multiple elements at once
+        s.AddRange(new[] { 2, 3, 4 });
+        PrintList(s);
+
+        // Alternative: Collection initializer for initial values
+        List&lt;int&gt; s2 = new List&lt;int&gt; { 0, 1, 2, 3, 4 };
+        PrintList(s2);
+    }
+
+    static void PrintList(List&lt;int&gt; s)
+    {
+        Console.WriteLine($&quot;Count={s.Count} Capacity={s.Capacity} [{string.Join(&quot;, &quot;, s)}]&quot;);
+    }
+}</code></pre>
+<p>Output:</p>
+<pre><code class="language-">Count=0 Capacity=0 []
+Count=1 Capacity=4 [0]
+Count=2 Capacity=4 [0, 1]
+Count=5 Capacity=8 [0, 1, 2, 3, 4]
+Count=5 Capacity=8 [0, 1, 2, 3, 4]</code></pre>
+</div>
+<div class="content-section key-differences">
+<h2>Key Differences</h2>
+<ul>
+<li><strong>Function vs Method</strong>: Go uses <code>append()</code> function; C# uses <code>.Add()</code> method on List<T></li>
+<li><strong>Return Value</strong>: Go append returns new slice; C# Add mutates existing list (no return needed)</li>
+<li><strong>Multiple Elements</strong>: Go <code>append(s, 1, 2, 3)</code>; C# <code>.AddRange(new[] {1, 2, 3})</code></li>
+<li><strong>Nil Handling</strong>: Go append works on nil slices; C# throws NullReferenceException on null lists</li>
+<li><strong>Capacity Growth</strong>: Both automatically grow capacity (Go and C# use similar doubling strategies)</li>
+<li><strong>Assignment Required</strong>: Go requires <code>s = append(s, x)</code> to capture new slice; C# mutates in place</li>
+<li><strong>Use Case Alignment</strong>: Both provide dynamic growth for collections.</li>
+</ul>
+<p><strong>Append patterns comparison</strong>:</p>
+<pre><code class="language-go">// Go: functional style (returns new slice)
+s := []int{}
+s = append(s, 1)
+s = append(s, 2, 3, 4)</code></pre>
+<pre><code class="language-csharp">// C# imperative style (mutates list)
+List&lt;int&gt; s = new List&lt;int&gt;();
+s.Add(1);
+s.AddRange(new[] { 2, 3, 4 });</code></pre>
+<p><strong>Different semantics</strong>:</p>
+<ul>
+<li><strong>Go append</strong>:</li>
+<li>Returns new slice (which may share underlying array)</li>
+<li>Must reassign: <code>s = append(s, x)</code></li>
+<li>Works on nil slices</li>
+<li>Can invalidate other slices sharing same array (if reallocation occurs)</li>
+</ul>
+<ul>
+<li><strong>C# Add</strong>:</li>
+<li>Mutates list in place</li>
+<li>No reassignment: <code>list.Add(x)</code></li>
+<li>Throws on null</li>
+<li>No sharing issues (List<T> owns its storage)</li>
+</ul>
+<p><strong>Why Go requires reassignment</strong>: When capacity is exceeded, append allocates new array and returns new slice pointing to it. Old slice still points to old array.</p>
+<pre><code class="language-go">s1 := []int{1, 2}
+s2 := s1
+s1 = append(s1, 3)  // May reallocate
+// s1 and s2 might now point to different arrays</code></pre>
+<p>C# List<T> doesn't have this issue � all references point to same list object.</p>
+<p><strong>Capacity growth comparison</strong>:</p>
+<ul>
+<li><strong>Go</strong>: Capacity typically doubles (implementation-dependent)</li>
+<li><strong>C#</strong>: Capacity doubles until 2048 elements, then grows by 25% (implementation-dependent)</li>
+</ul>
+<p><strong>Key insight</strong>: Go's append is functional (returns new value), while C# Add is imperative (mutates object). This reflects deeper design philosophies:</p>
+<ul>
+<li><strong>Go</strong>: Value-oriented, explicit about potential reallocation</li>
+<li><strong>C#</strong>: Object-oriented, mutations hidden behind method calls</li>
+</ul>
+<p><strong>Common mistake for C# developers learning Go</strong>:</p>
+<pre><code class="language-go">// WRONG: forgetting to reassign
+s := []int{1, 2}
+append(s, 3)  // Does nothing! Lost the returned slice
+
+// CORRECT:
+s = append(s, 3)  // Capture the returned slice</code></pre>
+<p><strong>For Go developers learning C#</strong>:</p>
+<pre><code class="language-csharp">// WRONG: trying to reassign
+List&lt;int&gt; list = new List&lt;int&gt; { 1, 2 };
+list = list.Add(3);  // Compile error! Add returns void
+
+// CORRECT:
+list.Add(3);  // Mutates in place</code></pre>
+<p>The mental model shift is significant � Go's append is a function returning a slice, C#'s Add is a method mutating an object.</p>
+</div>
+
+        
+        <div class="page-nav" id="pageNav">
+            <!-- Navigation buttons will be populated by JavaScript -->
+        </div>
+    </main>
+    
+    <script src="../assets/tour.js"></script>
+    <script>
+        // Add page navigation
+        const adjacent = getAdjacentPages();
+        const navContainer = document.getElementById('pageNav');
+        let navHtml = '';
+        
+        if (adjacent.prev) {
+            navHtml += '<a href="' + adjacent.prev.href + '" class="prev">' + adjacent.prev.title + '</a>';
+        } else {
+            navHtml += '<span></span>';
+        }
+        
+        if (adjacent.next) {
+            navHtml += '<a href="' + adjacent.next.href + '" class="next">' + adjacent.next.title + '</a>';
+        }
+        
+        navContainer.innerHTML = navHtml;
+    </script>
+</body>
+</html>

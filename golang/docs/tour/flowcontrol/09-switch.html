@@ -1,0 +1,159 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Switch - Go Tour with C# Comparison</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <button class="menu-toggle">☰ Menu</button>
+    
+    <nav class="nav-sidebar">
+        <!-- Navigation will be populated by JavaScript -->
+    </nav>
+    
+    <main class="main-content">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span>/</span>
+            <a href="01-for.html">Flow Control</a>
+            <span>/</span>
+            <span>Switch</span>
+        </div>
+        
+
+        <div class="content-header">
+            <h1>Switch</h1>
+            <div class="page-meta">
+                <span class="page-badge section">Flow Control</span>
+                <span class="page-badge page-number">Page 9 of 13</span>
+            </div>
+        </div>
+        
+        <div class="content-section go-section">
+<h2>Go Concept</h2>
+<p>Go's <code>switch</code> statement is a shorter way to write a sequence of if-else statements. It evaluates cases from top to bottom, stopping when a case succeeds.</p>
+<p>Key features:</p>
+<ul>
+<li>No parentheses around the switch expression</li>
+<li><strong>No fall-through by default</strong> (unlike C/C#) � Go runs only the selected case</li>
+<li>Cases can be expressions (not just constants)</li>
+<li>No <code>break</code> needed (it's implicit)</li>
+</ul>
+<h3>Go Example</h3>
+<pre><code class="language-go">package main
+
+import (
+	&quot;fmt&quot;
+	&quot;runtime&quot;
+)
+
+func main() {
+	fmt.Print(&quot;Go runs on &quot;)
+	switch os := runtime.GOOS; os {
+	case &quot;darwin&quot;:
+		fmt.Println(&quot;OS X.&quot;)
+	case &quot;linux&quot;:
+		fmt.Println(&quot;Linux.&quot;)
+	default:
+		fmt.Printf(&quot;%s.\n&quot;, os)
+	}
+}</code></pre>
+</div>
+<div class="content-section csharp-section">
+<h2>C# Equivalent</h2>
+<p>C# <code>switch</code> statements are similar but have different default behavior:</p>
+<ul>
+<li>Requires parentheses around the switch expression</li>
+<li><strong>Fall-through requires explicit <code>goto case</code></strong> (default is no fall-through like Go)</li>
+<li>Traditionally required constant case values, but C# 7.0+ added pattern matching</li>
+<li>Requires <code>break</code> at the end of each case (or another jump statement)</li>
+</ul>
+<p>Modern C# (8.0+) also has <strong>switch expressions</strong> which are more concise and expression-based.</p>
+<h3>C# Example</h3>
+<pre><code class="language-csharp">using System;
+using System.Runtime.InteropServices;
+
+class Program
+{
+    static void Main()
+    {
+        Console.Write(&quot;C# runs on &quot;);
+        
+        // Determine OS
+        string os;
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            os = &quot;darwin&quot;;
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            os = &quot;linux&quot;;
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            os = &quot;windows&quot;;
+        else
+            os = &quot;unknown&quot;;
+
+        switch (os)
+        {
+            case &quot;darwin&quot;:
+                Console.WriteLine(&quot;OS X.&quot;);
+                break;  // Explicit break required
+            case &quot;linux&quot;:
+                Console.WriteLine(&quot;Linux.&quot;);
+                break;
+            default:
+                Console.WriteLine($&quot;{os}.&quot;);
+                break;
+        }
+
+        // C# 8.0+ switch expression (more concise):
+        var message = os switch
+        {
+            &quot;darwin&quot; =&gt; &quot;OS X.&quot;,
+            &quot;linux&quot; =&gt; &quot;Linux.&quot;,
+            _ =&gt; $&quot;{os}.&quot;
+        };
+        Console.WriteLine(message);
+    }
+}</code></pre>
+</div>
+<div class="content-section key-differences">
+<h2>Key Differences</h2>
+<ul>
+<li><strong>Parentheses</strong>: Go doesn't use them; C# requires them</li>
+<li><strong>Break Statement</strong>: Go doesn't need <code>break</code> (no fall-through); C# requires <code>break</code></li>
+<li><strong>Fall-Through</strong>: Go's default is no fall-through (use <code>fallthrough</code> keyword for it); C# also defaults to no fall-through but requires <code>break</code></li>
+<li><strong>Short Statement</strong>: Go supports switch short statement like <code>switch os := getOS(); os {}</code>; C# doesn't</li>
+<li><strong>Expression Cases</strong>: Go always supported expression cases; C# added pattern matching in 7.0+</li>
+<li><strong>Switch Expressions</strong>: C# 8.0+ has concise switch expressions; Go doesn't have this syntax</li>
+<li><strong>Use Case Alignment</strong>: Both provide multi-way branching. Go's syntax is cleaner (no parentheses, no breaks). C#'s traditional switch requires more boilerplate but modern C# switch expressions are very concise. The use cases align perfectly � both handle multi-way branches based on a value.</li>
+</ul>
+<p><strong>Modern C# (8.0+) switch expressions</strong> are actually more concise than Go for simple value mappings, while Go's traditional switch is cleaner than C#'s traditional switch for statement-based cases.</p>
+</div>
+
+        
+        <div class="page-nav" id="pageNav">
+            <!-- Navigation buttons will be populated by JavaScript -->
+        </div>
+    </main>
+    
+    <script src="../assets/tour.js"></script>
+    <script>
+        // Add page navigation
+        const adjacent = getAdjacentPages();
+        const navContainer = document.getElementById('pageNav');
+        let navHtml = '';
+        
+        if (adjacent.prev) {
+            navHtml += '<a href="' + adjacent.prev.href + '" class="prev">' + adjacent.prev.title + '</a>';
+        } else {
+            navHtml += '<span></span>';
+        }
+        
+        if (adjacent.next) {
+            navHtml += '<a href="' + adjacent.next.href + '" class="next">' + adjacent.next.title + '</a>';
+        }
+        
+        navContainer.innerHTML = navHtml;
+    </script>
+</body>
+</html>

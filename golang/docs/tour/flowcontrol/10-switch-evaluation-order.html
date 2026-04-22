@@ -1,0 +1,149 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Switch Evaluation Order - Go Tour with C# Comparison</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <button class="menu-toggle">☰ Menu</button>
+    
+    <nav class="nav-sidebar">
+        <!-- Navigation will be populated by JavaScript -->
+    </nav>
+    
+    <main class="main-content">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span>/</span>
+            <a href="01-for.html">Flow Control</a>
+            <span>/</span>
+            <span>Switch Evaluation Order</span>
+        </div>
+        
+
+        <div class="content-header">
+            <h1>Switch Evaluation Order</h1>
+            <div class="page-meta">
+                <span class="page-badge section">Flow Control</span>
+                <span class="page-badge page-number">Page 10 of 13</span>
+            </div>
+        </div>
+        
+        <div class="content-section go-section">
+<h2>Go Concept</h2>
+<p>Switch cases evaluate from top to bottom, <strong>stopping when a case succeeds</strong>. This is important for cases with side effects or expensive computations.</p>
+<p>Cases are evaluated in order, and only the first matching case is executed. Subsequent cases are not even evaluated.</p>
+<h3>Go Example</h3>
+<pre><code class="language-go">package main
+
+import (
+	&quot;fmt&quot;
+	&quot;time&quot;
+)
+
+func main() {
+	fmt.Println(&quot;When's Saturday?&quot;)
+	today := time.Now().Weekday()
+	switch time.Saturday {
+	case today + 0:
+		fmt.Println(&quot;Today.&quot;)
+	case today + 1:
+		fmt.Println(&quot;Tomorrow.&quot;)
+	case today + 2:
+		fmt.Println(&quot;In two days.&quot;)
+	default:
+		fmt.Println(&quot;Too far away.&quot;)
+	}
+}</code></pre>
+</div>
+<div class="content-section csharp-section">
+<h2>C# Equivalent</h2>
+<p>C# switch statements also evaluate cases in order and execute only the first matching case. However:</p>
+<ul>
+<li>C# switch traditionally only allowed constant case values</li>
+<li>C# 7.0+ pattern matching allows expressions, but they must be compile-time constants for traditional switches</li>
+<li>C# switch expressions (8.0+) can use runtime expressions</li>
+</ul>
+<p>The evaluation order is the same, but C# has historically been more restrictive about what can be in a case.</p>
+<h3>C# Example</h3>
+<pre><code class="language-csharp">using System;
+
+class Program
+{
+    static void Main()
+    {
+        Console.WriteLine(&quot;When's Saturday?&quot;);
+        var today = DateTime.Now.DayOfWeek;
+        var daysUntilSaturday = ((int)DayOfWeek.Saturday - (int)today + 7) % 7;
+
+        // Traditional switch with constant cases
+        switch (daysUntilSaturday)
+        {
+            case 0:
+                Console.WriteLine(&quot;Today.&quot;);
+                break;
+            case 1:
+                Console.WriteLine(&quot;Tomorrow.&quot;);
+                break;
+            case 2:
+                Console.WriteLine(&quot;In two days.&quot;);
+                break;
+            default:
+                Console.WriteLine(&quot;Too far away.&quot;);
+                break;
+        }
+
+        // C# 8.0+ switch expression (cleaner)
+        var message = daysUntilSaturday switch
+        {
+            0 =&gt; &quot;Today.&quot;,
+            1 =&gt; &quot;Tomorrow.&quot;,
+            2 =&gt; &quot;In two days.&quot;,
+            _ =&gt; &quot;Too far away.&quot;
+        };
+        Console.WriteLine(message);
+    }
+}</code></pre>
+</div>
+<div class="content-section key-differences">
+<h2>Key Differences</h2>
+<ul>
+<li><strong>Expression Cases</strong>: Go allows runtime expression cases directly; C# traditionally requires constants</li>
+<li><strong>Order Guarantee</strong>: Both evaluate top-to-bottom and stop at first match</li>
+<li><strong>Side Effects</strong>: Both only evaluate cases until a match is found</li>
+<li><strong>Pattern Matching</strong>: Modern C# (7.0+) supports pattern matching cases; Go doesn't have pattern matching</li>
+<li><strong>Switch Expressions</strong>: C# 8.0+ switch expressions make this pattern more concise; Go uses traditional switch</li>
+<li><strong>Use Case Alignment</strong>: Both evaluate cases in order and stop at the first match. Go allows more flexible expressions in cases directly, while C# historically required computing the value first and switching on it. Modern C# switch expressions provide similar flexibility and conciseness.</li>
+</ul>
+<p>The key learning point (evaluation order, stop at first match) is <strong>identical in both languages</strong>. The difference is that Go has always been more flexible with expression cases, while C# added this flexibility gradually through pattern matching and switch expressions.</p>
+</div>
+
+        
+        <div class="page-nav" id="pageNav">
+            <!-- Navigation buttons will be populated by JavaScript -->
+        </div>
+    </main>
+    
+    <script src="../assets/tour.js"></script>
+    <script>
+        // Add page navigation
+        const adjacent = getAdjacentPages();
+        const navContainer = document.getElementById('pageNav');
+        let navHtml = '';
+        
+        if (adjacent.prev) {
+            navHtml += '<a href="' + adjacent.prev.href + '" class="prev">' + adjacent.prev.title + '</a>';
+        } else {
+            navHtml += '<span></span>';
+        }
+        
+        if (adjacent.next) {
+            navHtml += '<a href="' + adjacent.next.href + '" class="next">' + adjacent.next.title + '</a>';
+        }
+        
+        navContainer.innerHTML = navHtml;
+    </script>
+</body>
+</html>

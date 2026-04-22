@@ -1,0 +1,134 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Methods - Go Tour with C# Comparison</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <button class="menu-toggle">☰ Menu</button>
+    
+    <nav class="nav-sidebar">
+        <!-- Navigation will be populated by JavaScript -->
+    </nav>
+    
+    <main class="main-content">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span>/</span>
+            <a href="01-methods.html">Methods</a>
+            <span>/</span>
+            <span>Methods</span>
+        </div>
+        
+
+        <div class="content-header">
+            <h1>Methods</h1>
+            <div class="page-meta">
+                <span class="page-badge section">Methods</span>
+                <span class="page-badge page-number">Page 1 of 23</span>
+            </div>
+        </div>
+        
+        <div class="content-section go-section">
+<h2>Go Concept</h2>
+<p>Go doesn't have classes, but you can define methods on types. A method is a function with a special <strong>receiver</strong> argument that appears between the <code>func</code> keyword and the method name. The receiver gives the method access to the type's data.</p>
+<p>Methods allow you to attach behavior to your custom types. The receiver can be any type you define in your package, not just structs.</p>
+<h3>Go Example</h3>
+<pre><code class="language-go">package main
+
+import (
+	&quot;fmt&quot;
+	&quot;math&quot;
+)
+
+type Vertex struct {
+	X, Y float64
+}
+
+// Abs method has a receiver of type Vertex
+func (v Vertex) Abs() float64 {
+	return math.Sqrt(v.X*v.X + v.Y*v.Y)
+}
+
+func main() {
+	v := Vertex{3, 4}
+	fmt.Println(v.Abs()) // Output: 5
+}</code></pre>
+</div>
+<div class="content-section csharp-section">
+<h2>C# Equivalent</h2>
+<p>C# has <strong>instance methods</strong> that are defined inside classes and structs. These methods have implicit access to the instance through the <code>this</code> keyword. C# also has <strong>extension methods</strong> which can add methods to existing types without modifying them.</p>
+<h3>C# Example</h3>
+<pre><code class="language-csharp">using System;
+
+public struct Vertex
+{
+    public double X { get; set; }
+    public double Y { get; set; }
+    
+    // Instance method
+    public double Abs()
+    {
+        return Math.Sqrt(X * X + Y * Y);
+    }
+}
+
+// Extension method (defined in a static class)
+public static class VertexExtensions
+{
+    public static double Abs(this Vertex v)
+    {
+        return Math.Sqrt(v.X * v.X + v.Y * v.Y);
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        var v = new Vertex { X = 3, Y = 4 };
+        Console.WriteLine(v.Abs()); // Output: 5
+    }
+}</code></pre>
+</div>
+<div class="content-section key-differences">
+<h2>Key Differences</h2>
+<ul>
+<li><strong>Definition Location</strong>: Go methods are defined outside the type; C# instance methods are defined inside classes/structs</li>
+<li><strong>Receiver Syntax</strong>: Go uses explicit receiver syntax <code>(v Vertex)</code>; C# uses implicit <code>this</code> access</li>
+<li><strong>Type Flexibility</strong>: Go methods can be defined on any type (including built-in types via type aliases); C# instance methods only on classes/structs you control</li>
+<li><strong>Extension Methods</strong>: Go's method syntax works like C# extension methods but is more natural and doesn't require special static class syntax</li>
+<li><strong>No Classes Required</strong>: Go achieves object-oriented behavior without classes; C# requires classes or structs</li>
+<li><strong>Method Set</strong>: Go methods are not part of the type declaration; C# methods are part of the type definition</li>
+</ul>
+</div>
+
+        
+        <div class="page-nav" id="pageNav">
+            <!-- Navigation buttons will be populated by JavaScript -->
+        </div>
+    </main>
+    
+    <script src="../assets/tour.js"></script>
+    <script>
+        // Add page navigation
+        const adjacent = getAdjacentPages();
+        const navContainer = document.getElementById('pageNav');
+        let navHtml = '';
+        
+        if (adjacent.prev) {
+            navHtml += '<a href="' + adjacent.prev.href + '" class="prev">' + adjacent.prev.title + '</a>';
+        } else {
+            navHtml += '<span></span>';
+        }
+        
+        if (adjacent.next) {
+            navHtml += '<a href="' + adjacent.next.href + '" class="next">' + adjacent.next.title + '</a>';
+        }
+        
+        navContainer.innerHTML = navHtml;
+    </script>
+</body>
+</html>

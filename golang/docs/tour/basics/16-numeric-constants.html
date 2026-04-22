@@ -1,0 +1,150 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Numeric Constants - Go Tour with C# Comparison</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <button class="menu-toggle">☰ Menu</button>
+    
+    <nav class="nav-sidebar">
+        <!-- Navigation will be populated by JavaScript -->
+    </nav>
+    
+    <main class="main-content">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span>/</span>
+            <a href="01-packages.html">Basics</a>
+            <span>/</span>
+            <span>Numeric Constants</span>
+        </div>
+        
+
+        <div class="content-header">
+            <h1>Numeric Constants</h1>
+            <div class="page-meta">
+                <span class="page-badge section">Basics</span>
+                <span class="page-badge page-number">Page 16 of 16</span>
+            </div>
+        </div>
+        
+        <div class="content-section go-section">
+<h2>Go Concept</h2>
+<p>Numeric constants are <strong>high-precision values</strong>. An untyped constant takes the type needed by its context.</p>
+<p>Untyped numeric constants can be arbitrarily large until they're assigned to a typed variable. They don't overflow until you give them a specific type. This allows writing large numbers and precise calculations without worrying about type limits.</p>
+<h3>Go Example</h3>
+<pre><code class="language-go">package main
+
+import &quot;fmt&quot;
+
+const (
+	// Create a huge number by shifting a 1 bit left 100 places.
+	// In other words, the binary number that is 1 followed by 100 zeroes.
+	Big = 1 &lt;&lt; 100
+	// Shift it right again 99 places, so we end up with 1&lt;&lt;1, or 2.
+	Small = Big &gt;&gt; 99
+)
+
+func needInt(x int) int { return x*10 + 1 }
+func needFloat(x float64) float64 {
+	return x * 0.1
+}
+
+func main() {
+	fmt.Println(needInt(Small))
+	fmt.Println(needFloat(Small))
+	fmt.Println(needFloat(Big))
+	// fmt.Println(needInt(Big))  // This would overflow and cause an error
+}</code></pre>
+</div>
+<div class="content-section csharp-section">
+<h2>C# Equivalent</h2>
+<p>C# <strong>does not have</strong> untyped high-precision constants in the same way. All C# numeric literals have specific types, and constants must fit within those type limits:</p>
+<ul>
+<li>Integer literals default to <code>int</code> (32-bit), or the smallest type that fits</li>
+<li>Floating-point literals default to <code>double</code></li>
+<li>You can't create constants larger than <code>ulong</code> (64-bit) or <code>decimal</code> (128-bit) limits</li>
+</ul>
+<p>For arbitrary-precision arithmetic, C# has <strong><code>BigInteger</code></strong> from <code>System.Numerics</code>, but it cannot be used with <code>const</code> � you must use <code>readonly static</code> and accept runtime initialization.</p>
+<h3>C# Example</h3>
+<pre><code class="language-csharp">using System;
+using System.Numerics;
+
+class Program
+{
+    // Cannot use const with BigInteger
+    static readonly BigInteger Big = BigInteger.Parse(&quot;1267650600228229401496703205376&quot;);
+    static readonly BigInteger Small = Big &gt;&gt; 99;  // 2
+
+    static int NeedInt(int x) =&gt; x * 10 + 1;
+    static double NeedFloat(double x) =&gt; x * 0.1;
+
+    static void Main()
+    {
+        Console.WriteLine(NeedInt((int)Small));
+        Console.WriteLine(NeedFloat((double)Small));
+        // Console.WriteLine(NeedInt((int)Big));  // Would overflow
+        
+        // Working with BigInteger directly
+        Console.WriteLine(Big);
+        Console.WriteLine(Small);
+    }
+}
+
+// Alternative for compile-time calculations within type limits:
+class Constants
+{
+    const int Large = 1 &lt;&lt; 30;   // OK: fits in int
+    // const int TooBig = 1 &lt;&lt; 100;  // ERROR: doesn't fit in any const type
+}</code></pre>
+</div>
+<div class="content-section key-differences">
+<h2>Key Differences</h2>
+<ul>
+<li><strong>Untyped Constants</strong>: Go has untyped high-precision constants; C# constants must fit in a specific type</li>
+<li><strong>Arbitrary Precision</strong>: Go constants can be arbitrarily large until assignment; C# limits constants to fixed-size types</li>
+<li><strong>BigInteger</strong>: C# has <code>BigInteger</code> for large numbers, but it can't be <code>const</code> (must be <code>readonly</code> with runtime initialization)</li>
+<li><strong>Overflow Checking</strong>: Go checks overflow when assigning to typed variables; C# checks at constant declaration time</li>
+<li><strong>Context-Dependent Type</strong>: Go constants take type from context; C# literals have fixed types</li>
+<li><strong>Bit Shifting</strong>: Both support bit shifting, but Go can shift beyond normal type limits in constants</li>
+<li><strong>Use Case Alignment</strong>: This is a <strong>significant difference without a direct equivalent</strong>. Go's untyped constants allow mathematical expressions with large numbers in constants, automatically fitting to the needed type at usage. C# requires choosing a type upfront or using <code>BigInteger</code> at runtime.</li>
+</ul>
+<p><strong>When they differ</strong>:</p>
+<ul>
+<li>Go: Can write <code>const Big = 1 &lt;&lt; 100</code> and use it in float context without issue</li>
+<li>C#: Must use <code>BigInteger</code> or compute at runtime; cannot have arbitrarily large <code>const</code> values</li>
+</ul>
+<p>This is a unique Go feature that provides flexibility for mathematical constants. In C#, you work around it by: 1. Using smaller constants that fit in <code>ulong</code> or <code>decimal</code> 2. Using <code>BigInteger</code> with <code>readonly static</code> (runtime, not compile-time) 3. Computing values at runtime</p>
+<p>For most practical purposes, C#'s approach works fine, but Go's untyped constants are more elegant for mathematical code with large numbers.</p>
+</div>
+
+        
+        <div class="page-nav" id="pageNav">
+            <!-- Navigation buttons will be populated by JavaScript -->
+        </div>
+    </main>
+    
+    <script src="../assets/tour.js"></script>
+    <script>
+        // Add page navigation
+        const adjacent = getAdjacentPages();
+        const navContainer = document.getElementById('pageNav');
+        let navHtml = '';
+        
+        if (adjacent.prev) {
+            navHtml += '<a href="' + adjacent.prev.href + '" class="prev">' + adjacent.prev.title + '</a>';
+        } else {
+            navHtml += '<span></span>';
+        }
+        
+        if (adjacent.next) {
+            navHtml += '<a href="' + adjacent.next.href + '" class="next">' + adjacent.next.title + '</a>';
+        }
+        
+        navContainer.innerHTML = navHtml;
+    </script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>If - Go Tour with C# Comparison</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <button class="menu-toggle">☰ Menu</button>
+    
+    <nav class="nav-sidebar">
+        <!-- Navigation will be populated by JavaScript -->
+    </nav>
+    
+    <main class="main-content">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span>/</span>
+            <a href="01-for.html">Flow Control</a>
+            <span>/</span>
+            <span>If</span>
+        </div>
+        
+
+        <div class="content-header">
+            <h1>If</h1>
+            <div class="page-meta">
+                <span class="page-badge section">Flow Control</span>
+                <span class="page-badge page-number">Page 5 of 13</span>
+            </div>
+        </div>
+        
+        <div class="content-section go-section">
+<h2>Go Concept</h2>
+<p>Go's <code>if</code> statement is similar to C-style if statements, but:</p>
+<ul>
+<li>No parentheses <code>()</code> around the condition</li>
+<li>Braces <code>{}</code> are required (even for single statements)</li>
+</ul>
+<p>The condition doesn't need parentheses, making it less cluttered. The braces are required to avoid ambiguity and common bugs.</p>
+<h3>Go Example</h3>
+<pre><code class="language-go">package main
+
+import (
+	&quot;fmt&quot;
+	&quot;math&quot;
+)
+
+func sqrt(x float64) string {
+	if x &lt; 0 {
+		return sqrt(-x) + &quot;i&quot;
+	}
+	return fmt.Sprint(math.Sqrt(x))
+}
+
+func main() {
+	fmt.Println(sqrt(2), sqrt(-4))
+}</code></pre>
+</div>
+<div class="content-section csharp-section">
+<h2>C# Equivalent</h2>
+<p>C# <code>if</code> statements require parentheses around the condition:</p>
+<ul>
+<li>Parentheses <code>()</code> are required around the condition</li>
+<li>Braces <code>{}</code> are optional for single statements but recommended</li>
+<li>Same boolean expressions and logic</li>
+</ul>
+<p>The concepts are identical, only the syntax requirements differ.</p>
+<h3>C# Example</h3>
+<pre><code class="language-csharp">using System;
+
+class Program
+{
+    static string Sqrt(double x)
+    {
+        if (x &lt; 0)  // Parentheses required in C#
+        {
+            return Sqrt(-x) + &quot;i&quot;;
+        }
+        return Math.Sqrt(x).ToString();
+    }
+
+    static void Main()
+    {
+        Console.WriteLine($&quot;{Sqrt(2)} {Sqrt(-4)}&quot;);
+    }
+}</code></pre>
+</div>
+<div class="content-section key-differences">
+<h2>Key Differences</h2>
+<ul>
+<li><strong>Parentheses</strong>: Go doesn't use parentheses around conditions; C# requires them</li>
+<li><strong>Braces</strong>: Go always requires braces; C# allows omitting them for single statements (not recommended)</li>
+<li><strong>Syntax Cleanliness</strong>: Go's syntax is slightly cleaner without parentheses; C# is more traditional C-style</li>
+<li><strong>Error Prevention</strong>: Go's mandatory braces prevent "dangling else" bugs; C#'s optional braces can lead to bugs</li>
+<li><strong>Use Case Alignment</strong>: Both provide conditional execution. The logic and use cases are identical. The only differences are:</li>
+<li><strong>Parentheses requirement</strong> (C# yes, Go no)</li>
+<li><strong>Brace requirement</strong> (Go always, C# optional but recommended)</li>
+</ul>
+<p>This is purely syntactic � the functionality is the same. Many C# style guides recommend always using braces, bringing it closer to Go's enforced style.</p>
+</div>
+
+        
+        <div class="page-nav" id="pageNav">
+            <!-- Navigation buttons will be populated by JavaScript -->
+        </div>
+    </main>
+    
+    <script src="../assets/tour.js"></script>
+    <script>
+        // Add page navigation
+        const adjacent = getAdjacentPages();
+        const navContainer = document.getElementById('pageNav');
+        let navHtml = '';
+        
+        if (adjacent.prev) {
+            navHtml += '<a href="' + adjacent.prev.href + '" class="prev">' + adjacent.prev.title + '</a>';
+        } else {
+            navHtml += '<span></span>';
+        }
+        
+        if (adjacent.next) {
+            navHtml += '<a href="' + adjacent.next.href + '" class="next">' + adjacent.next.title + '</a>';
+        }
+        
+        navContainer.innerHTML = navHtml;
+    </script>
+</body>
+</html>

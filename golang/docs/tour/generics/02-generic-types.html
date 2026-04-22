@@ -1,0 +1,183 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generic Types - Go Tour with C# Comparison</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <button class="menu-toggle">☰ Menu</button>
+    
+    <nav class="nav-sidebar">
+        <!-- Navigation will be populated by JavaScript -->
+    </nav>
+    
+    <main class="main-content">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span>/</span>
+            <a href="01-type-parameters.html">Generics</a>
+            <span>/</span>
+            <span>Generic Types</span>
+        </div>
+        
+
+        <div class="content-header">
+            <h1>Generic Types</h1>
+            <div class="page-meta">
+                <span class="page-badge section">Generics</span>
+                <span class="page-badge page-number">Page 2 of 2</span>
+            </div>
+        </div>
+        
+        <div class="content-section go-section">
+<h2>Go Concept</h2>
+<p>In addition to generic functions, Go supports <strong>generic types</strong> (structs, interfaces, and other type definitions). A generic type has type parameters that are specified when you create an instance of that type. This allows you to create data structures that work with any type while maintaining type safety.</p>
+<p>Generic types are particularly useful for container types like lists, trees, and custom collections.</p>
+<h3>Go Example</h3>
+<pre><code class="language-go">package main
+
+import &quot;fmt&quot;
+
+// List is a generic singly-linked list that can hold values of any type
+type List[T any] struct {
+	next *List[T]
+	val  T
+}
+
+// Add appends a new element to the end of the list
+func (l *List[T]) Add(val T) {
+	if l.next == nil {
+		l.next = &amp;List[T]{val: val}
+	} else {
+		l.next.Add(val)
+	}
+}
+
+// PrintAll prints all elements in the list
+func (l *List[T]) PrintAll() {
+	current := l
+	for current != nil {
+		fmt.Println(current.val)
+		current = current.next
+	}
+}
+
+func main() {
+	// Create a list of integers
+	var intList List[int]
+	intList.val = 1
+	intList.Add(2)
+	intList.Add(3)
+	
+	fmt.Println(&quot;Integer list:&quot;)
+	intList.PrintAll()
+	
+	// Create a list of strings
+	var strList List[string]
+	strList.val = &quot;hello&quot;
+	strList.Add(&quot;world&quot;)
+	
+	fmt.Println(&quot;\nString list:&quot;)
+	strList.PrintAll()
+}</code></pre>
+</div>
+<div class="content-section csharp-section">
+<h2>C# Equivalent</h2>
+<p>C# has supported <strong>generic classes and structs</strong> since C# 2.0. The syntax and capabilities are very similar to Go's generic types. C# generic classes are the foundation of the .NET collections framework (List<T>, Dictionary<K,V>, etc.).</p>
+<p>Key differences:</p>
+<ul>
+<li>Go uses square brackets <code>[]</code>; C# uses angle brackets <code>&lt;&gt;</code></li>
+<li>C# has covariance/contravariance for generic interfaces (Go does not)</li>
+<li>C# can have static members in generic types (Go cannot have type-level state)</li>
+<li>Both support constraints on type parameters</li>
+</ul>
+<h3>C# Example</h3>
+<pre><code class="language-csharp">using System;
+
+// Generic linked list class
+public class List&lt;T&gt;
+{
+    public List&lt;T&gt; Next { get; set; }
+    public T Value { get; set; }
+
+    public List(T value)
+    {
+        Value = value;
+    }
+
+    // Add appends a new element to the end of the list
+    public void Add(T value)
+    {
+        if (Next == null)
+        {
+            Next = new List&lt;T&gt;(value);
+        }
+        else
+        {
+            Next.Add(value);
+        }
+    }
+
+    // PrintAll prints all elements in the list
+    public void PrintAll()
+    {
+        var current = this;
+        while (current != null)
+        {
+            Console.WriteLine(current.Value);
+            current = current.Next;
+        }
+    }
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        // Create a list of integers
+        var intList = new List&lt;int&gt;(1);
+        intList.Add(2);
+        intList.Add(3);
+        
+        Console.WriteLine(&quot;Integer list:&quot;);
+        intList.PrintAll();
+        
+        // Create a list of strings
+        var strList = new List&lt;string&gt;(&quot;hello&quot;);
+        strList.Add(&quot;world&quot;);
+        
+        Console.WriteLine(&quot;\nString list:&quot;);
+        strList.PrintAll();
+    }
+}</code></pre>
+</div>
+
+        
+        <div class="page-nav" id="pageNav">
+            <!-- Navigation buttons will be populated by JavaScript -->
+        </div>
+    </main>
+    
+    <script src="../assets/tour.js"></script>
+    <script>
+        // Add page navigation
+        const adjacent = getAdjacentPages();
+        const navContainer = document.getElementById('pageNav');
+        let navHtml = '';
+        
+        if (adjacent.prev) {
+            navHtml += '<a href="' + adjacent.prev.href + '" class="prev">' + adjacent.prev.title + '</a>';
+        } else {
+            navHtml += '<span></span>';
+        }
+        
+        if (adjacent.next) {
+            navHtml += '<a href="' + adjacent.next.href + '" class="next">' + adjacent.next.title + '</a>';
+        }
+        
+        navContainer.innerHTML = navHtml;
+    </script>
+</body>
+</html>

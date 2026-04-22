@@ -1,0 +1,315 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select - Go Tour with C# Comparison</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <button class="menu-toggle">☰ Menu</button>
+    
+    <nav class="nav-sidebar">
+        <!-- Navigation will be populated by JavaScript -->
+    </nav>
+    
+    <main class="main-content">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span>/</span>
+            <a href="01-goroutines.html">Concurrency</a>
+            <span>/</span>
+            <span>Select</span>
+        </div>
+        
+
+        <div class="content-header">
+            <h1>Select</h1>
+            <div class="page-meta">
+                <span class="page-badge section">Concurrency</span>
+                <span class="page-badge page-number">Page 5 of 9</span>
+            </div>
+        </div>
+        
+        <div class="content-section go-section">
+<h2>Go Concept</h2>
+<p>The <strong><code>select</code></strong> statement lets a goroutine wait on multiple communication operations. It blocks until one of its cases can proceed, then executes that case. If multiple cases are ready, it chooses one at random.</p>
+<pre><code class="language-go">select {
+case msg := &lt;-ch1:
+    // Use msg from ch1
+case msg := &lt;-ch2:
+    // Use msg from ch2
+case ch3 &lt;- value:
+    // Send value to ch3
+}</code></pre>
+<p><code>select</code> is fundamental to Go's concurrency model:</p>
+<ul>
+<li>Coordinate between multiple channels</li>
+<li>Implement timeouts</li>
+<li>Non-blocking operations (with <code>default</code>)</li>
+<li>Build complex concurrent patterns</li>
+</ul>
+<h3>Go Example</h3>
+<pre><code class="language-go">package main
+
+import (
+	&quot;fmt&quot;
+	&quot;time&quot;
+)
+
+func main() {
+	c1 := make(chan string)
+	c2 := make(chan string)
+
+	// Goroutine sends to c1 after 1 second
+	go func() {
+		time.Sleep(1 * time.Second)
+		c1 &lt;- &quot;one&quot;
+	}()
+
+	// Goroutine sends to c2 after 2 seconds
+	go func() {
+		time.Sleep(2 * time.Second)
+		c2 &lt;- &quot;two&quot;
+	}()
+
+	// Wait for both messages
+	for i := 0; i &lt; 2; i++ {
+		select {
+		case msg1 := &lt;-c1:
+			fmt.Println(&quot;received&quot;, msg1)
+		case msg2 := &lt;-c2:
+			fmt.Println(&quot;received&quot;, msg2)
+		}
+	}
+}</code></pre>
+<h3>Select with Timeout</h3>
+<pre><code class="language-go">func main() {
+	c := make(chan string)
+	
+	go func() {
+		time.Sleep(2 * time.Second)
+		c &lt;- &quot;result&quot;
+	}()
+	
+	select {
+	case res := &lt;-c:
+		fmt.Println(res)
+	case &lt;-time.After(1 * time.Second):
+		fmt.Println(&quot;timeout&quot;)
+	}
+	// Output: timeout
+}</code></pre>
+</div>
+<div class="content-section csharp-section">
+<h2>C# Equivalent</h2>
+<p>C# uses <strong>Task.WhenAny</strong> for similar scenarios - waiting for the first of multiple async operations to complete. For true channel multiplexing, C# can use <code>Channel&lt;T&gt;</code> with manual coordination.</p>
+<h3><strong>Paradigm Difference:</strong></h3>
+<p><strong>Go:</strong></p>
+<ul>
+<li><code>select</code> is a <strong>language construct</strong> designed for channel operations</li>
+<li>Blocks on multiple channels simultaneously</li>
+<li>Integral to CSP model</li>
+<li>Random selection when multiple ready</li>
+</ul>
+<p><strong>C#:</strong></p>
+<ul>
+<li><strong>Task.WhenAny</strong> works with any async operations</li>
+<li><strong>Manual channel coordination</strong> required for true multiplexing</li>
+<li>Part of async/await model, not a special construct</li>
+<li>Predictable ordering based on completion order</li>
+</ul>
+<h3>When Paradigms Align:</h3>
+<ul>
+<li>Waiting for first of multiple operations: <code>select</code> � <code>Task.WhenAny</code></li>
+<li>Timeouts: <code>time.After()</code> case � <code>Task.Delay()</code> with WhenAny</li>
+<li>Multiple data sources: Go select � C# reading multiple channels</li>
+</ul>
+<h3>When Paradigms Differ:</h3>
+<ul>
+<li>Go: select blocks cheaply, natural for any coordination</li>
+<li>C#: Manual coordination more verbose, often use Task-based patterns instead</li>
+</ul>
+<h3>C# Example (Task.WhenAny)</h3>
+<pre><code class="language-csharp">using System;
+using System.Threading.Tasks;
+
+class Program
+{
+    static async Task&lt;string&gt; AfterDelay(int seconds, string message)
+    {
+        await Task.Delay(seconds * 1000);
+        return message;
+    }
+
+    static async Task Main()
+    {
+        var task1 = AfterDelay(1, &quot;one&quot;);
+        var task2 = AfterDelay(2, &quot;two&quot;);
+
+        // Wait for both tasks (like Go's example with 2 iterations)
+        for (int i = 0; i &lt; 2; i++)
+        {
+            var completed = await Task.WhenAny(task1, task2);
+            var result = await completed;
+            Console.WriteLine($&quot;received {result}&quot;);
+            
+            // Remove completed task from consideration
+            if (completed == task1)
+                task1 = Task.FromResult(&quot;already completed&quot;);
+            else
+                task2 = Task.FromResult(&quot;already completed&quot;);
+        }
+    }
+}</code></pre>
+<h3>C# Example (Timeout with Task.WhenAny)</h3>
+<pre><code class="language-csharp">using System;
+using System.Threading.Tasks;
+
+class Program
+{
+    static async Task&lt;string&gt; LongOperation()
+    {
+        await Task.Delay(2000);
+        return &quot;result&quot;;
+    }
+
+    static async Task Main()
+    {
+        var operationTask = LongOperation();
+        var timeoutTask = Task.Delay(1000);
+        
+        var completed = await Task.WhenAny(operationTask, timeoutTask);
+        
+        if (completed == timeoutTask)
+        {
+            Console.WriteLine(&quot;timeout&quot;);
+        }
+        else
+        {
+            Console.WriteLine(await operationTask);
+        }
+        // Output: timeout
+    }
+}</code></pre>
+<h3>C# Example (Manual Channel Multiplexing)</h3>
+<p>For true channel-style multiplexing in C#:</p>
+<pre><code class="language-csharp">using System;
+using System.Threading.Channels;
+using System.Threading.Tasks;
+
+class Program
+{
+    static async Task Main()
+    {
+        var channel1 = Channel.CreateUnbounded&lt;string&gt;();
+        var channel2 = Channel.CreateUnbounded&lt;string&gt;();
+
+        // Producer for channel 1
+        _ = Task.Run(async () =&gt;
+        {
+            await Task.Delay(1000);
+            await channel1.Writer.WriteAsync(&quot;one&quot;);
+        });
+
+        // Producer for channel 2
+        _ = Task.Run(async () =&gt;
+        {
+            await Task.Delay(2000);
+            await channel2.Writer.WriteAsync(&quot;two&quot;);
+        });
+
+        // Multiplex channels (simulate select)
+        for (int i = 0; i &lt; 2; i++)
+        {
+            var task1 = channel1.Reader.ReadAsync().AsTask();
+            var task2 = channel2.Reader.ReadAsync().AsTask();
+            
+            var completed = await Task.WhenAny(task1, task2);
+            
+            if (completed == task1)
+            {
+                Console.WriteLine($&quot;received {await task1}&quot;);
+            }
+            else
+            {
+                Console.WriteLine($&quot;received {await task2}&quot;);
+            }
+        }
+    }
+}</code></pre>
+<h3>C# Alternative: Merge Channels</h3>
+<p>Another approach is to merge channels into one:</p>
+<pre><code class="language-csharp">static async IAsyncEnumerable&lt;T&gt; Merge&lt;T&gt;(
+    ChannelReader&lt;T&gt; reader1, 
+    ChannelReader&lt;T&gt; reader2)
+{
+    var task1 = reader1.WaitToReadAsync().AsTask();
+    var task2 = reader2.WaitToReadAsync().AsTask();
+    
+    while (true)
+    {
+        var completed = await Task.WhenAny(task1, task2);
+        
+        if (completed == task1)
+        {
+            if (await task1)
+            {
+                while (reader1.TryRead(out var item))
+                    yield return item;
+                task1 = reader1.WaitToReadAsync().AsTask();
+            }
+            else
+            {
+                // Channel 1 completed
+                reader1 = null;
+            }
+        }
+        else // completed == task2
+        {
+            if (await task2)
+            {
+                while (reader2.TryRead(out var item))
+                    yield return item;
+                task2 = reader2.WaitToReadAsync().AsTask();
+            }
+            else
+            {
+                // Channel 2 completed
+                reader2 = null;
+            }
+        }
+        
+        if (reader1 == null &amp;&amp; reader2 == null)
+            break;
+    }
+}</code></pre>
+</div>
+
+        
+        <div class="page-nav" id="pageNav">
+            <!-- Navigation buttons will be populated by JavaScript -->
+        </div>
+    </main>
+    
+    <script src="../assets/tour.js"></script>
+    <script>
+        // Add page navigation
+        const adjacent = getAdjacentPages();
+        const navContainer = document.getElementById('pageNav');
+        let navHtml = '';
+        
+        if (adjacent.prev) {
+            navHtml += '<a href="' + adjacent.prev.href + '" class="prev">' + adjacent.prev.title + '</a>';
+        } else {
+            navHtml += '<span></span>';
+        }
+        
+        if (adjacent.next) {
+            navHtml += '<a href="' + adjacent.next.href + '" class="next">' + adjacent.next.title + '</a>';
+        }
+        
+        navContainer.innerHTML = navHtml;
+    </script>
+</body>
+</html>

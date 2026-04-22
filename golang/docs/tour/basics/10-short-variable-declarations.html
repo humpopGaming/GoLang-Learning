@@ -1,0 +1,118 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Short Variable Declarations - Go Tour with C# Comparison</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <button class="menu-toggle">☰ Menu</button>
+    
+    <nav class="nav-sidebar">
+        <!-- Navigation will be populated by JavaScript -->
+    </nav>
+    
+    <main class="main-content">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span>/</span>
+            <a href="01-packages.html">Basics</a>
+            <span>/</span>
+            <span>Short Variable Declarations</span>
+        </div>
+        
+
+        <div class="content-header">
+            <h1>Short Variable Declarations</h1>
+            <div class="page-meta">
+                <span class="page-badge section">Basics</span>
+                <span class="page-badge page-number">Page 10 of 16</span>
+            </div>
+        </div>
+        
+        <div class="content-section go-section">
+<h2>Go Concept</h2>
+<p>Inside functions, the <strong><code>:=</code> short assignment</strong> can be used instead of a <code>var</code> declaration with implicit type. This is Go's most common way to declare local variables.</p>
+<p>The <code>:=</code> operator combines declaration and initialization in one concise statement. It can only be used inside functions, not at package level.</p>
+<h3>Go Example</h3>
+<pre><code class="language-go">package main
+
+import &quot;fmt&quot;
+
+func main() {
+	var i, j int = 1, 2
+	k := 3
+	c, python, java := true, false, &quot;no!&quot;
+
+	fmt.Println(i, j, k, c, python, java)
+}</code></pre>
+</div>
+<div class="content-section csharp-section">
+<h2>C# Equivalent</h2>
+<p>C# <strong>does not have</strong> a direct equivalent to Go's <code>:=</code> operator. The closest equivalent is C#'s <code>var</code> keyword for type inference, but it requires the full <code>var name = value</code> syntax.</p>
+<p>C# developers use <code>var</code> for local variable type inference, which serves a similar purpose (reducing verbosity) but with different syntax. C# always requires the <code>var</code> keyword; Go's <code>:=</code> is more concise.</p>
+<h3>C# Example</h3>
+<pre><code class="language-csharp">using System;
+
+class Program
+{
+    static void Main()
+    {
+        // Explicit types
+        int i = 1, j = 2;
+        
+        // Type inference with var (closest to Go's :=)
+        var k = 3;
+        var c = true;
+        var python = false;
+        var java = &quot;no!&quot;;
+
+        // Cannot declare multiple vars of different types in one line like Go
+        // Must do separately
+        
+        Console.WriteLine($&quot;{i} {j} {k} {c} {python} {java}&quot;);
+    }
+}</code></pre>
+</div>
+<div class="content-section key-differences">
+<h2>Key Differences</h2>
+<ul>
+<li><strong>Operator vs Keyword</strong>: Go uses <code>:=</code> operator; C# uses <code>var</code> keyword</li>
+<li><strong>Syntax Length</strong>: Go's <code>:=</code> is more concise; C# requires <code>var name = </code></li>
+<li><strong>Multiple Different Types</strong>: Go can declare multiple variables of different types with <code>:=</code> in one line; C# requires separate statements</li>
+<li><strong>Scope Restriction</strong>: Go's <code>:=</code> only works in functions; C#'s <code>var</code> also only works in methods (both are local-only)</li>
+<li><strong>Package/Class Level</strong>: Neither can be used at package/class level; both require explicit types there</li>
+<li><strong>Reassignment</strong>: Go's <code>:=</code> declares; <code>=</code> assigns. C#'s <code>var</code> declares; <code>=</code> assigns. The distinction is important in Go where <code>:=</code> can redeclare variables in multi-assignment if at least one is new</li>
+<li><strong>Use Case Alignment</strong>: Both features reduce boilerplate for local variable declarations with type inference. Go's <code>:=</code> is more concise and idiomatic for Go developers (used constantly). C#'s <code>var</code> is widely used but more verbose. The use case is identical: declare local variables without typing out the type.</li>
+</ul>
+<p><strong>No direct C# equivalent exists for <code>:=</code> operator</strong>. C# developers use <code>var</code> which achieves similar goals (type inference, reduced verbosity) but requires more characters. This is one of Go's most distinctive syntax features.</p>
+</div>
+
+        
+        <div class="page-nav" id="pageNav">
+            <!-- Navigation buttons will be populated by JavaScript -->
+        </div>
+    </main>
+    
+    <script src="../assets/tour.js"></script>
+    <script>
+        // Add page navigation
+        const adjacent = getAdjacentPages();
+        const navContainer = document.getElementById('pageNav');
+        let navHtml = '';
+        
+        if (adjacent.prev) {
+            navHtml += '<a href="' + adjacent.prev.href + '" class="prev">' + adjacent.prev.title + '</a>';
+        } else {
+            navHtml += '<span></span>';
+        }
+        
+        if (adjacent.next) {
+            navHtml += '<a href="' + adjacent.next.href + '" class="next">' + adjacent.next.title + '</a>';
+        }
+        
+        navContainer.innerHTML = navHtml;
+    </script>
+</body>
+</html>

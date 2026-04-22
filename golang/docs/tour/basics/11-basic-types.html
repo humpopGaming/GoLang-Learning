@@ -1,0 +1,138 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Types - Go Tour with C# Comparison</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <button class="menu-toggle">☰ Menu</button>
+    
+    <nav class="nav-sidebar">
+        <!-- Navigation will be populated by JavaScript -->
+    </nav>
+    
+    <main class="main-content">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span>/</span>
+            <a href="01-packages.html">Basics</a>
+            <span>/</span>
+            <span>Basic Types</span>
+        </div>
+        
+
+        <div class="content-header">
+            <h1>Basic Types</h1>
+            <div class="page-meta">
+                <span class="page-badge section">Basics</span>
+                <span class="page-badge page-number">Page 11 of 16</span>
+            </div>
+        </div>
+        
+        <div class="content-section go-section">
+<h2>Go Concept</h2>
+<p>Go's basic types include:</p>
+<ul>
+<li><strong>bool</strong>: Boolean values (<code>true</code> or <code>false</code>)</li>
+<li><strong>string</strong>: String values</li>
+<li><strong>int</strong>, <strong>int8</strong>, <strong>int16</strong>, <strong>int32</strong>, <strong>int64</strong>: Signed integers of various sizes</li>
+<li><strong>uint</strong>, <strong>uint8</strong>, <strong>uint16</strong>, <strong>uint32</strong>, <strong>uint64</strong>: Unsigned integers</li>
+<li><strong>byte</strong>: Alias for uint8</li>
+<li><strong>rune</strong>: Alias for int32, represents a Unicode code point</li>
+<li><strong>float32</strong>, <strong>float64</strong>: Floating-point numbers</li>
+<li><strong>complex64</strong>, <strong>complex128</strong>: Complex numbers</li>
+</ul>
+<p>The <code>int</code>, <code>uint</code>, and <code>uintptr</code> types are platform-dependent (32 or 64 bits depending on the system).</p>
+<h3>Go Example</h3>
+<pre><code class="language-go">package main
+
+import (
+	&quot;fmt&quot;
+	&quot;math/cmplx&quot;
+)
+
+var (
+	ToBe   bool       = false
+	MaxInt uint64     = 1&lt;&lt;64 - 1
+	z      complex128 = cmplx.Sqrt(-5 + 12i)
+)
+
+func main() {
+	fmt.Printf(&quot;Type: %T Value: %v\n&quot;, ToBe, ToBe)
+	fmt.Printf(&quot;Type: %T Value: %v\n&quot;, MaxInt, MaxInt)
+	fmt.Printf(&quot;Type: %T Value: %v\n&quot;, z, z)
+}</code></pre>
+</div>
+<div class="content-section csharp-section">
+<h2>C# Equivalent</h2>
+<p>C# has similar basic types with some naming and behavioral differences:</p>
+<ul>
+<li><strong>bool</strong>: Same as Go</li>
+<li><strong>string</strong>: Same as Go (though implemented differently)</li>
+<li><strong>sbyte</strong>, <strong>short</strong>, <strong>int</strong>, <strong>long</strong>: Signed integers (8, 16, 32, 64 bits)</li>
+<li><strong>byte</strong>, <strong>ushort</strong>, <strong>uint</strong>, <strong>ulong</strong>: Unsigned integers (8, 16, 32, 64 bits)</li>
+<li><strong>char</strong>: 16-bit Unicode character (similar to Go's rune but different)</li>
+<li><strong>float</strong>, <strong>double</strong>, <strong>decimal</strong>: Floating-point and decimal types</li>
+<li><strong>Complex</strong> (in System.Numerics): Complex numbers (not a primitive type)</li>
+</ul>
+<p>Key differences: C# has fixed sizes for all integer types (no platform-dependent int), and C# includes <code>decimal</code> for precise decimal arithmetic.</p>
+<h3>C# Example</h3>
+<pre><code class="language-csharp">using System;
+using System.Numerics;
+
+class Program
+{
+    static bool ToBe = false;
+    static ulong MaxInt = ulong.MaxValue;  // C# provides MaxValue constants
+    static Complex z = Complex.Sqrt(new Complex(-5, 12));
+
+    static void Main()
+    {
+        Console.WriteLine($&quot;Type: {ToBe.GetType()} Value: {ToBe}&quot;);
+        Console.WriteLine($&quot;Type: {MaxInt.GetType()} Value: {MaxInt}&quot;);
+        Console.WriteLine($&quot;Type: {z.GetType()} Value: {z}&quot;);
+    }
+}</code></pre>
+</div>
+<div class="content-section key-differences">
+<h2>Key Differences</h2>
+<ul>
+<li><strong>Integer Sizes</strong>: Go has platform-dependent <code>int</code>/<code>uint</code>; C# has fixed-size <code>int</code> (always 32-bit) and <code>IntPtr</code>/<code>UIntPtr</code> for platform-specific</li>
+<li><strong>Character Types</strong>: Go uses <code>rune</code> (int32) for Unicode code points; C# uses <code>char</code> (16-bit, UTF-16 code unit)</li>
+<li><strong>Byte Alias</strong>: Go's <code>byte</code> is alias for <code>uint8</code>; C# <code>byte</code> is directly uint8 with no sbyte alias</li>
+<li><strong>Complex Numbers</strong>: Go has primitive <code>complex64</code>/<code>complex128</code>; C# has struct type <code>Complex</code> in a library</li>
+<li><strong>Decimal Type</strong>: C# has <code>decimal</code> for financial calculations; Go uses packages for arbitrary precision</li>
+<li><strong>Default Sizes</strong>: Go's <code>int</code> is platform-dependent; C#'s <code>int</code> is always 32 bits</li>
+<li><strong>Use Case Alignment</strong>: Both provide a rich set of numeric types for different precision and performance needs. Go's approach with platform-dependent <code>int</code> is designed for performance (native word size), while C#'s fixed sizes provide predictability. For most use cases, the types map directly (Go's <code>int32</code> = C#'s <code>int</code>, Go's <code>float64</code> = C#'s <code>double</code>). The main exception is complex numbers, where Go has first-class support and C# requires a library.</li>
+</ul>
+</div>
+
+        
+        <div class="page-nav" id="pageNav">
+            <!-- Navigation buttons will be populated by JavaScript -->
+        </div>
+    </main>
+    
+    <script src="../assets/tour.js"></script>
+    <script>
+        // Add page navigation
+        const adjacent = getAdjacentPages();
+        const navContainer = document.getElementById('pageNav');
+        let navHtml = '';
+        
+        if (adjacent.prev) {
+            navHtml += '<a href="' + adjacent.prev.href + '" class="prev">' + adjacent.prev.title + '</a>';
+        } else {
+            navHtml += '<span></span>';
+        }
+        
+        if (adjacent.next) {
+            navHtml += '<a href="' + adjacent.next.href + '" class="next">' + adjacent.next.title + '</a>';
+        }
+        
+        navContainer.innerHTML = navHtml;
+    </script>
+</body>
+</html>

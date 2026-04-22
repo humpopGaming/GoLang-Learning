@@ -17,14 +17,14 @@ Build a program with multiple functions that convert temperatures between Celsiu
 
 ## Tour Reference — Read These First
 
-1. [Functions](https://go.dev/tour/basics/4) — Functions take typed parameters; type comes after the name
-2. [Functions continued](https://go.dev/tour/basics/5) — Consecutive params of the same type can be shortened
-3. [Multiple results](https://go.dev/tour/basics/6) — A function can return multiple values
-4. [Named return values](https://go.dev/tour/basics/7) — Return values can be named; naked return returns them
-5. [Basic types](https://go.dev/tour/basics/11) — Go's built-in types: `int`, `float64`, `bool`, `string`, etc.
-6. [Zero values](https://go.dev/tour/basics/12) — Variables without initial values get zero values
-7. [Type conversions](https://go.dev/tour/basics/13) — Use `T(v)` to convert value `v` to type `T`
-8. [Type inference](https://go.dev/tour/basics/14) — `:=` infers the type from the right-hand side
+1. [Functions](tour/basics/04-functions.html) — Functions take typed parameters; type comes after the name
+2. [Functions Continued](tour/basics/05-functions-continued.html) — Consecutive params of the same type can be shortened
+3. [Multiple Results](tour/basics/06-multiple-results.html) — A function can return multiple values
+4. [Named Return Values](tour/basics/07-named-return-values.html) — Return values can be named; naked return returns them
+5. [Basic Types](tour/basics/11-basic-types.html) — Go's built-in types: `int`, `float64`, `bool`, `string`, etc.
+6. [Zero Values](tour/basics/12-zero-values.html) — Variables without initial values get zero values
+7. [Type Conversions](tour/basics/13-type-conversions.html) — Use `T(v)` to convert value `v` to type `T`
+8. [Type Inference](tour/basics/14-type-inference.html) — `:=` infers the type from the right-hand side
 
 ## What to Build
 

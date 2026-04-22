@@ -1,0 +1,177 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nil Interface Values - Go Tour with C# Comparison</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <button class="menu-toggle">☰ Menu</button>
+    
+    <nav class="nav-sidebar">
+        <!-- Navigation will be populated by JavaScript -->
+    </nav>
+    
+    <main class="main-content">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span>/</span>
+            <a href="01-methods.html">Methods</a>
+            <span>/</span>
+            <span>Nil Interface Values</span>
+        </div>
+        
+
+        <div class="content-header">
+            <h1>Nil Interface Values</h1>
+            <div class="page-meta">
+                <span class="page-badge section">Methods</span>
+                <span class="page-badge page-number">Page 13 of 23</span>
+            </div>
+        </div>
+        
+        <div class="content-section go-section">
+<h2>Go Concept</h2>
+<p>A nil interface value holds neither value nor concrete type. Calling a method on a nil interface is a <strong>runtime error</strong> because there is no type inside the interface tuple to indicate which concrete method to call.</p>
+<p>This is different from an interface holding a nil value: a nil interface has no type information at all, while an interface with a nil value still knows what type it should be.</p>
+<h3>Go Example</h3>
+<pre><code class="language-go">package main
+
+import &quot;fmt&quot;
+
+type I interface {
+	M()
+}
+
+func describe(i I) {
+	fmt.Printf(&quot;(%v, %T)\n&quot;, i, i)
+}
+
+func main() {
+	var i I
+	describe(i) // (&lt;nil&gt;, &lt;nil&gt;)
+	
+	// Uncommenting this would cause a runtime panic:
+	// i.M()
+	// panic: runtime error: invalid memory address or nil pointer dereference
+	
+	// This is different from an interface with a nil underlying value:
+	var t *T
+	i = t
+	describe(i) // (&lt;nil&gt;, *main.T) - interface is NOT nil
+	i.M()       // Works if M handles nil receiver
+}
+
+type T struct {
+	S string
+}
+
+func (t *T) M() {
+	if t == nil {
+		fmt.Println(&quot;&lt;nil receiver&gt;&quot;)
+		return
+	}
+	fmt.Println(t.S)
+}</code></pre>
+</div>
+<div class="content-section csharp-section">
+<h2>C# Equivalent</h2>
+<p>C# has a simpler model: interface variables can be null, and calling methods on null references throws a <strong>NullReferenceException</strong>. C# doesn't distinguish between "null interface" and "interface containing null value" in the same way Go does - if the interface variable is null, that's the end of the story.</p>
+<p>C# 8.0+ introduced nullable reference types which provide compile-time null safety checking.</p>
+<h3>C# Example</h3>
+<pre><code class="language-csharp">using System;
+
+#nullable enable
+
+public interface I
+{
+    void M();
+}
+
+public class T : I
+{
+    public string S { get; set; }
+    
+    public void M()
+    {
+        Console.WriteLine(S ?? &quot;&lt;null&gt;&quot;);
+    }
+}
+
+class Program
+{
+    static void Describe(I? i)
+    {
+        if (i == null)
+        {
+            Console.WriteLine(&quot;(null, null)&quot;);
+        }
+        else
+        {
+            Console.WriteLine($&quot;({i}, {i.GetType().Name})&quot;);
+        }
+    }
+    
+    static void Main()
+    {
+        I? i = null;
+        Describe(i); // (null, null)
+        
+        // Uncommenting this would throw NullReferenceException
+        // i.M();
+        
+        // C# approach: null-conditional operator
+        i?.M(); // Safe - doesn't execute if i is null
+        
+        // With nullable reference types, compiler warns:
+        // I nonNullable = null; // Warning: Converting null literal
+        
+        i = new T { S = &quot;hello&quot; };
+        Describe(i); // (hello, T)
+        i.M();       // hello
+    }
+}</code></pre>
+</div>
+<div class="content-section key-differences">
+<h2>Key Differences</h2>
+<ul>
+<li><strong>Nil Interface Semantics</strong>: Go has nil interface (no type info); C# has null reference (no object)</li>
+<li><strong>Error Type</strong>: Go causes runtime panic; C# throws NullReferenceException</li>
+<li><strong>Type Information</strong>: Go nil interface has no type tuple; C# null reference is simply absent</li>
+<li><strong>Detection</strong>: Go can check <code>i == nil</code>; C# checks for null reference the same way</li>
+<li><strong>Nullable Reference Types</strong>: C# 8.0+ has compiler-enforced null safety; Go has runtime nil checks</li>
+<li><strong>Interface with Nil Value</strong>: Go distinguishes this from nil interface; C# doesn't have this distinction</li>
+<li><strong>Safety</strong>: Both are runtime errors, but C# has compiler warnings with nullable reference types</li>
+<li><strong>Common Practice</strong>: Go checks for nil interface; C# uses null-conditional operators (<code>?.</code>, <code>??</code>)</li>
+<li><strong>Design Philosophy</strong>: Go's model is more complex but more flexible; C#'s is simpler but less nuanced</li>
+</ul>
+</div>
+
+        
+        <div class="page-nav" id="pageNav">
+            <!-- Navigation buttons will be populated by JavaScript -->
+        </div>
+    </main>
+    
+    <script src="../assets/tour.js"></script>
+    <script>
+        // Add page navigation
+        const adjacent = getAdjacentPages();
+        const navContainer = document.getElementById('pageNav');
+        let navHtml = '';
+        
+        if (adjacent.prev) {
+            navHtml += '<a href="' + adjacent.prev.href + '" class="prev">' + adjacent.prev.title + '</a>';
+        } else {
+            navHtml += '<span></span>';
+        }
+        
+        if (adjacent.next) {
+            navHtml += '<a href="' + adjacent.next.href + '" class="next">' + adjacent.next.title + '</a>';
+        }
+        
+        navContainer.innerHTML = navHtml;
+    </script>
+</body>
+</html>

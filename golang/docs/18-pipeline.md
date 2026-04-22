@@ -16,9 +16,9 @@ Build a number-processing pipeline using channels — goroutines connected by ch
 
 ## Tour Reference — Read These First
 
-1. [Channels](https://go.dev/tour/concurrency/2) — Create, send, receive; channels synchronize goroutines
-2. [Buffered Channels](https://go.dev/tour/concurrency/3) — `make(chan int, 100)` — sends block when buffer is full
-3. [Range and Close](https://go.dev/tour/concurrency/4) — `close(ch)` signals no more values; `for v := range ch` drains it
+1. [Channels](tour/concurrency/02-channels.html) — Create, send, receive; channels synchronize goroutines
+2. [Buffered Channels](tour/concurrency/03-buffered-channels.html) — `make(chan int, 100)` — sends block when buffer is full
+3. [Range and Close](tour/concurrency/04-range-and-close.html) — `close(ch)` signals no more values; `for v := range ch` drains it
 
 ## What to Build
 

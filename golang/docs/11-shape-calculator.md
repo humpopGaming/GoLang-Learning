@@ -15,14 +15,14 @@ Build a shape calculator with methods on struct types, practising both value rec
 
 ## Tour Reference — Read These First
 
-1. [Methods](https://go.dev/tour/methods/1) — A method has a receiver between `func` and the method name
-2. [Methods are functions](https://go.dev/tour/methods/2) — A method is just a function with a receiver argument
-3. [Methods continued](https://go.dev/tour/methods/3) — Methods on non-struct types
-4. [Pointer receivers](https://go.dev/tour/methods/4) — Use `*T` to modify the receiver
-5. [Pointers and functions](https://go.dev/tour/methods/5) — Compare methods vs equivalent plain functions
-6. [Methods and pointer indirection](https://go.dev/tour/methods/6) — `v.Scale(5)` auto-becomes `(&v).Scale(5)`
-7. [Methods and pointer indirection (2)](https://go.dev/tour/methods/7) — `p.Abs()` auto-becomes `(*p).Abs()`
-8. [Choosing a value or pointer receiver](https://go.dev/tour/methods/8) — Use pointer receivers to modify or avoid copying
+1. [Methods](tour/methods/01-methods.html) — A method has a receiver between `func` and the method name
+2. [Methods are Functions](tour/methods/02-methods-are-functions.html) — A method is just a function with a receiver argument
+3. [Methods Continued](tour/methods/03-methods-continued.html) — Methods on non-struct types
+4. [Pointer Receivers](tour/methods/04-pointer-receivers.html) — Use `*T` to modify the receiver
+5. [Pointers and Functions](tour/methods/05-pointers-and-functions.html) — Compare methods vs equivalent plain functions
+6. [Methods and Pointer Indirection](tour/methods/06-methods-and-pointer-indirection.html) — `v.Scale(5)` auto-becomes `(&v).Scale(5)`
+7. [Methods and Pointer Indirection 2](tour/methods/07-methods-and-pointer-indirection-2.html) — `p.Abs()` auto-becomes `(*p).Abs()`
+8. [Choosing a Value or Pointer Receiver](tour/methods/08-choosing-value-or-pointer-receiver.html) — Use pointer receivers to modify or avoid copying
 
 ## What to Build
 

@@ -1,0 +1,195 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mutating Maps - Go Tour with C# Comparison</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <button class="menu-toggle">☰ Menu</button>
+    
+    <nav class="nav-sidebar">
+        <!-- Navigation will be populated by JavaScript -->
+    </nav>
+    
+    <main class="main-content">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span>/</span>
+            <a href="01-pointers.html">More Types</a>
+            <span>/</span>
+            <span>Mutating Maps</span>
+        </div>
+        
+
+        <div class="content-header">
+            <h1>Mutating Maps</h1>
+            <div class="page-meta">
+                <span class="page-badge section">More Types</span>
+                <span class="page-badge page-number">Page 22 of 25</span>
+            </div>
+        </div>
+        
+        <div class="content-section go-section">
+<h2>Go Concept</h2>
+<p>Map operations in Go:</p>
+<ul>
+<li><strong>Insert or update</strong>: <code>m[key] = elem</code></li>
+<li><strong>Retrieve</strong>: <code>elem = m[key]</code></li>
+<li><strong>Delete</strong>: <code>delete(m, key)</code></li>
+<li><strong>Test if key exists</strong>: <code>elem, ok = m[key]</code></li>
+<li>If <code>key</code> is in <code>m</code>, <code>ok</code> is <code>true</code></li>
+<li>If not, <code>ok</code> is <code>false</code> and <code>elem</code> is the zero value for the map's element type</li>
+<li>If <code>elem</code> or <code>ok</code> have not been declared, use short declaration: <code>elem, ok := m[key]</code></li>
+</ul>
+<h3>Go Example</h3>
+<pre><code class="language-go">package main
+
+import &quot;fmt&quot;
+
+func main() {
+	m := make(map[string]int)
+
+	// Insert
+	m[&quot;Answer&quot;] = 42
+	fmt.Println(&quot;The value:&quot;, m[&quot;Answer&quot;])
+
+	// Update
+	m[&quot;Answer&quot;] = 48
+	fmt.Println(&quot;The value:&quot;, m[&quot;Answer&quot;])
+
+	// Delete
+	delete(m, &quot;Answer&quot;)
+	fmt.Println(&quot;The value:&quot;, m[&quot;Answer&quot;])  // 0 (zero value)
+
+	// Test for presence
+	v, ok := m[&quot;Answer&quot;]
+	fmt.Println(&quot;The value:&quot;, v, &quot;Present?&quot;, ok)
+
+	// Common pattern: check before using
+	if val, exists := m[&quot;Answer&quot;]; exists {
+		fmt.Println(&quot;Found:&quot;, val)
+	} else {
+		fmt.Println(&quot;Not found&quot;)
+	}
+}</code></pre>
+</div>
+<div class="content-section csharp-section">
+<h2>C# Equivalent</h2>
+<p>C# <strong>Dictionary</strong> provides similar operations:</p>
+<ul>
+<li><strong>Insert or update</strong>: <code>dict[key] = value</code> or <code>dict.Add(key, value)</code> (throws if exists)</li>
+<li><strong>Retrieve</strong>: <code>value = dict[key]</code> (throws if not found)</li>
+<li><strong>Delete</strong>: <code>dict.Remove(key)</code> (returns bool)</li>
+<li><strong>Test if key exists</strong>: <code>dict.TryGetValue(key, out value)</code> or <code>dict.ContainsKey(key)</code></li>
+<li><strong>Safe operations</strong>: Use <code>TryGetValue</code> to avoid exceptions</li>
+</ul>
+<h3>C# Example</h3>
+<pre><code class="language-csharp">using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        var m = new Dictionary&lt;string, int&gt;();
+
+        // Insert (two ways)
+        m[&quot;Answer&quot;] = 42;
+        // m.Add(&quot;Answer&quot;, 42);  // Alternative: throws if key exists
+        Console.WriteLine($&quot;The value: {m[&quot;Answer&quot;]}&quot;);
+
+        // Update
+        m[&quot;Answer&quot;] = 48;
+        Console.WriteLine($&quot;The value: {m[&quot;Answer&quot;]}&quot;);
+
+        // Delete
+        m.Remove(&quot;Answer&quot;);
+        // Accessing non-existent key throws KeyNotFoundException
+        // Console.WriteLine($&quot;The value: {m[&quot;Answer&quot;]}&quot;);  // Would throw!
+
+        // Test for presence - TryGetValue (recommended)
+        if (m.TryGetValue(&quot;Answer&quot;, out int value))
+        {
+            Console.WriteLine($&quot;The value: {value} Present? True&quot;);
+        }
+        else
+        {
+            Console.WriteLine($&quot;The value: 0 Present? False&quot;);
+        }
+
+        // Alternative: ContainsKey (less efficient for retrieving)
+        if (m.ContainsKey(&quot;Answer&quot;))
+        {
+            Console.WriteLine($&quot;Found: {m[&quot;Answer&quot;]}&quot;);
+        }
+        else
+        {
+            Console.WriteLine(&quot;Not found&quot;);
+        }
+
+        // C# 7+ pattern: TryGetValue with pattern matching
+        if (m.TryGetValue(&quot;Answer&quot;, out var v))
+        {
+            Console.WriteLine($&quot;Found: {v}&quot;);
+        }
+        else
+        {
+            Console.WriteLine(&quot;Not found&quot;);
+        }
+    }
+}</code></pre>
+</div>
+<div class="content-section key-differences">
+<h2>Key Differences</h2>
+<ul>
+<li><strong>Access Safety</strong>: Go returns zero value for missing keys; C# throws <code>KeyNotFoundException</code></li>
+<li><strong>Existence Check</strong>: Go uses comma-ok idiom <code>v, ok := m[key]</code>; C# uses <code>TryGetValue(key, out value)</code> or <code>ContainsKey(key)</code></li>
+<li><strong>Delete Operation</strong>: Go uses built-in <code>delete(m, key)</code> function; C# uses <code>m.Remove(key)</code> method</li>
+<li><strong>Delete Return</strong>: Go's <code>delete</code> returns nothing; C#'s <code>Remove</code> returns <code>bool</code> indicating if key existed</li>
+<li><strong>Insert vs Update</strong>: Go has one syntax for both; C# has <code>Add</code> (insert only, throws if exists) and indexer (insert or update)</li>
+<li><strong>Idiomatic Patterns</strong>: Go's comma-ok is built into the language; C# uses out parameters and method calls</li>
+<li><strong>Performance</strong>: Go's comma-ok does one lookup; C# <code>ContainsKey</code> + indexer does two (use <code>TryGetValue</code> for one lookup)</li>
+<li><strong>Nil Map</strong>: Go allows reading from nil maps (returns zero value); C# null dictionary throws <code>NullReferenceException</code></li>
+</ul>
+<p><strong>Different philosophies</strong>:</p>
+<ul>
+<li>Go: Safe by default (missing keys return zero values), comma-ok idiom for explicit checks</li>
+<li>C#: Exceptions for missing keys, explicit methods for safe operations</li>
+</ul>
+<p><strong>Best practices alignment</strong>:</p>
+<ul>
+<li><strong>Go</strong>: Always use <code>v, ok := m[key]</code> when key might not exist</li>
+<li><strong>C#</strong>: Always use <code>TryGetValue</code> when key might not exist (avoids exceptions)</li>
+</ul>
+<p>Both languages encourage checking existence before access, but use different mechanisms. Go's comma-ok idiom is more concise and integrated, while C#'s approach is more explicit with method calls. The functional outcomes are equivalent.</p>
+</div>
+
+        
+        <div class="page-nav" id="pageNav">
+            <!-- Navigation buttons will be populated by JavaScript -->
+        </div>
+    </main>
+    
+    <script src="../assets/tour.js"></script>
+    <script>
+        // Add page navigation
+        const adjacent = getAdjacentPages();
+        const navContainer = document.getElementById('pageNav');
+        let navHtml = '';
+        
+        if (adjacent.prev) {
+            navHtml += '<a href="' + adjacent.prev.href + '" class="prev">' + adjacent.prev.title + '</a>';
+        } else {
+            navHtml += '<span></span>';
+        }
+        
+        if (adjacent.next) {
+            navHtml += '<a href="' + adjacent.next.href + '" class="next">' + adjacent.next.title + '</a>';
+        }
+        
+        navContainer.innerHTML = navHtml;
+    </script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map Literals Continued - Go Tour with C# Comparison</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <button class="menu-toggle">☰ Menu</button>
+    
+    <nav class="nav-sidebar">
+        <!-- Navigation will be populated by JavaScript -->
+    </nav>
+    
+    <main class="main-content">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span>/</span>
+            <a href="01-pointers.html">More Types</a>
+            <span>/</span>
+            <span>Map Literals Continued</span>
+        </div>
+        
+
+        <div class="content-header">
+            <h1>Map Literals Continued</h1>
+            <div class="page-meta">
+                <span class="page-badge section">More Types</span>
+                <span class="page-badge page-number">Page 21 of 25</span>
+            </div>
+        </div>
+        
+        <div class="content-section go-section">
+<h2>Go Concept</h2>
+<p>If the top-level type is just a type name, you can <strong>omit it from the elements of the literal</strong>.</p>
+<ul>
+<li>When the value type is obvious, you can use a shorthand notation</li>
+<li>Simply provide the values in braces without repeating the type name</li>
+<li>Makes code more concise and readable</li>
+<li>The compiler infers the type from the map's declared type</li>
+</ul>
+<h3>Go Example</h3>
+<pre><code class="language-go">package main
+
+import &quot;fmt&quot;
+
+type Vertex struct {
+	Lat, Long float64
+}
+
+var m = map[string]Vertex{
+	&quot;Bell Labs&quot;: {40.68433, -74.39967},  // Omitted &quot;Vertex&quot;
+	&quot;Google&quot;:    {37.42202, -122.08408}, // Omitted &quot;Vertex&quot;
+}
+
+func main() {
+	fmt.Println(m)
+}</code></pre>
+<p>Compare to the previous version where <code>Vertex</code> was explicitly stated:</p>
+<pre><code class="language-go">&quot;Bell Labs&quot;: Vertex{40.68433, -74.39967},</code></pre>
+</div>
+<div class="content-section csharp-section">
+<h2>C# Equivalent</h2>
+<p>C# has <strong>target-typed new expressions</strong> (C# 9+) and <strong>implicit object creation</strong>:</p>
+<ul>
+<li><strong>Target-typed new</strong> (C# 9+): Use <code>new()</code> when type can be inferred</li>
+<li><strong>Object initializers</strong>: Can sometimes omit type with proper context</li>
+<li>Type inference from declaration simplifies code</li>
+<li>Earlier versions required full type specification</li>
+</ul>
+<h3>C# Example</h3>
+<pre><code class="language-csharp">using System;
+using System.Collections.Generic;
+
+class Program
+{
+    struct Vertex
+    {
+        public double Lat { get; set; }
+        public double Long { get; set; }
+        
+        public Vertex(double lat, double lon)
+        {
+            Lat = lat;
+            Long = lon;
+        }
+    }
+
+    static void Main()
+    {
+        // C# 9+ target-typed new expression
+        Dictionary&lt;string, Vertex&gt; m = new()
+        {
+            [&quot;Bell Labs&quot;] = new(40.68433, -74.39967),  // Omitted &quot;Vertex&quot;
+            [&quot;Google&quot;] = new(37.42202, -122.08408)     // Omitted &quot;Vertex&quot;
+        };
+
+        // Or with var
+        var m2 = new Dictionary&lt;string, Vertex&gt;
+        {
+            [&quot;Bell Labs&quot;] = new Vertex(40.68433, -74.39967),  // Must specify Vertex here
+            [&quot;Google&quot;] = new Vertex(37.42202, -122.08408)
+        };
+
+        // Older C# versions required full specification
+        Dictionary&lt;string, Vertex&gt; m3 = new Dictionary&lt;string, Vertex&gt;
+        {
+            [&quot;Bell Labs&quot;] = new Vertex(40.68433, -74.39967),
+            [&quot;Google&quot;] = new Vertex(37.42202, -122.08408)
+        };
+
+        foreach (var kvp in m)
+        {
+            Console.WriteLine($&quot;{kvp.Key}: Lat={kvp.Value.Lat}, Long={kvp.Value.Long}&quot;);
+        }
+    }
+}</code></pre>
+</div>
+<div class="content-section key-differences">
+<h2>Key Differences</h2>
+<ul>
+<li><strong>Type Omission</strong>: Go omits type name in composite literals when obvious; C# uses <code>new()</code> in C# 9+</li>
+<li><strong>Context Requirements</strong>: Go infers from map's value type; C# infers from variable's declared type</li>
+<li><strong>Syntax</strong>: Go uses <code>{values}</code> without type; C# uses <code>new(values)</code> or requires full type</li>
+<li><strong>Version Support</strong>: Go had this from early versions; C# added target-typed new in C# 9 (2020)</li>
+<li><strong>Readability</strong>: Both achieve similar conciseness in modern versions</li>
+<li><strong>Backward Compatibility</strong>: Go syntax unchanged; C# evolved through versions</li>
+<li><strong>var Usage</strong>: Go always allows omission with type context; C# with <code>var</code> requires explicit <code>Vertex</code> constructor</li>
+</ul>
+<p><strong>Different philosophies</strong>:</p>
+<ul>
+<li>Go: Type inference integrated early, consistent syntax</li>
+<li>C#: Type inference evolved gradually through language versions</li>
+</ul>
+<p>Both languages recognize that repeating type names is verbose when the compiler can infer them. Go's approach is slightly more implicit (just braces), while C# requires the <code>new()</code> keyword to signal construction. The result is similarly concise code in modern versions of both languages.</p>
+<p><strong>When to use</strong>: Use type omission when the type is obvious from context. It reduces noise and improves readability. The explicit version remains valid and might be clearer in complex scenarios.</p>
+</div>
+
+        
+        <div class="page-nav" id="pageNav">
+            <!-- Navigation buttons will be populated by JavaScript -->
+        </div>
+    </main>
+    
+    <script src="../assets/tour.js"></script>
+    <script>
+        // Add page navigation
+        const adjacent = getAdjacentPages();
+        const navContainer = document.getElementById('pageNav');
+        let navHtml = '';
+        
+        if (adjacent.prev) {
+            navHtml += '<a href="' + adjacent.prev.href + '" class="prev">' + adjacent.prev.title + '</a>';
+        } else {
+            navHtml += '<span></span>';
+        }
+        
+        if (adjacent.next) {
+            navHtml += '<a href="' + adjacent.next.href + '" class="next">' + adjacent.next.title + '</a>';
+        }
+        
+        navContainer.innerHTML = navHtml;
+    </script>
+</body>
+</html>

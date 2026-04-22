@@ -13,7 +13,7 @@ Write generic utility functions that work on slices of any type, learning Go's t
 
 ## Tour Reference — Read These First
 
-1. [Type parameters](https://go.dev/tour/generics/1) — Functions can have type parameters in `[brackets]`
+1. [Type Parameters](tour/generics/01-type-parameters.html) — Functions can have type parameters in `[brackets]`
 
 ## What to Build
 

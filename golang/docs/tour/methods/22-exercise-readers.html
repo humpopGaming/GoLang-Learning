@@ -1,0 +1,123 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise: Readers - Go Tour with C# Comparison</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <button class="menu-toggle">☰ Menu</button>
+    
+    <nav class="nav-sidebar">
+        <!-- Navigation will be populated by JavaScript -->
+    </nav>
+    
+    <main class="main-content">
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span>/</span>
+            <a href="01-methods.html">Methods</a>
+            <span>/</span>
+            <span>Exercise: Readers</span>
+        </div>
+        
+
+        <div class="content-header">
+            <h1>Exercise: Readers</h1>
+            <div class="page-meta">
+                <span class="page-badge section">Methods</span>
+                <span class="page-badge page-number">Page 22 of 23</span>
+            </div>
+        </div>
+        
+        <div class="content-section csharp-section">
+<h2>C# Equivalent</h2>
+<p>Exercise</p>
+<pre><code class="language-csharp">using System;
+using System.IO;
+
+// Implement a Stream that emits infinite 'A' characters
+class MyStream : Stream
+{
+    // TODO: Implement Read method
+    public override int Read(byte[] buffer, int offset, int count)
+    {
+        // Fill buffer with 'A' (ASCII 65)
+        return 0;
+    }
+    
+    // Required Stream properties (read-only stream)
+    public override bool CanRead =&gt; true;
+    public override bool CanSeek =&gt; false;
+    public override bool CanWrite =&gt; false;
+    public override long Length =&gt; throw new NotSupportedException();
+    public override long Position 
+    { 
+        get =&gt; throw new NotSupportedException(); 
+        set =&gt; throw new NotSupportedException(); 
+    }
+    
+    public override void Flush() { }
+    public override long Seek(long offset, SeekOrigin origin) =&gt; throw new NotSupportedException();
+    public override void SetLength(long value) =&gt; throw new NotSupportedException();
+    public override void Write(byte[] buffer, int offset, int count) =&gt; throw new NotSupportedException();
+}
+
+class Program
+{
+    static void Main()
+    {
+        using var stream = new MyStream();
+        byte[] buffer = new byte[10];
+        int bytesRead = stream.Read(buffer, 0, buffer.Length);
+        
+        Console.WriteLine($&quot;Read {bytesRead} bytes&quot;);
+        Console.WriteLine($&quot;Content: {System.Text.Encoding.ASCII.GetString(buffer)}&quot;);
+        // Should print: AAAAAAAAAA
+    }
+}</code></pre>
+<p><strong>C# Solution:</strong></p>
+<pre><code class="language-csharp">public override int Read(byte[] buffer, int offset, int count)
+{
+    for (int i = 0; i &lt; count; i++)
+    {
+        buffer[offset + i] = (byte)'A';
+    }
+    return count;
+}</code></pre>
+<p><strong>Alternative: Using Span<byte> (modern C#):</strong></p>
+<pre><code class="language-csharp">public override int Read(Span&lt;byte&gt; buffer)
+{
+    buffer.Fill((byte)'A');
+    return buffer.Length;
+}</code></pre>
+</div>
+
+        
+        <div class="page-nav" id="pageNav">
+            <!-- Navigation buttons will be populated by JavaScript -->
+        </div>
+    </main>
+    
+    <script src="../assets/tour.js"></script>
+    <script>
+        // Add page navigation
+        const adjacent = getAdjacentPages();
+        const navContainer = document.getElementById('pageNav');
+        let navHtml = '';
+        
+        if (adjacent.prev) {
+            navHtml += '<a href="' + adjacent.prev.href + '" class="prev">' + adjacent.prev.title + '</a>';
+        } else {
+            navHtml += '<span></span>';
+        }
+        
+        if (adjacent.next) {
+            navHtml += '<a href="' + adjacent.next.href + '" class="next">' + adjacent.next.title + '</a>';
+        }
+        
+        navContainer.innerHTML = navHtml;
+    </script>
+</body>
+</html>

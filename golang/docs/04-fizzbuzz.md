@@ -14,12 +14,12 @@ Implement the classic FizzBuzz problem to practise Go's `for` loop (all three fo
 
 ## Tour Reference — Read These First
 
-1. [For](https://go.dev/tour/flowcontrol/1) — Go's only loop construct; three components separated by semicolons
-2. [For continued](https://go.dev/tour/flowcontrol/2) — Init and post statements are optional
-3. [For is Go's "while"](https://go.dev/tour/flowcontrol/3) — Drop the semicolons for a while-style loop
-4. [If](https://go.dev/tour/flowcontrol/5) — No parentheses around condition, braces are required
-5. [If with a short statement](https://go.dev/tour/flowcontrol/6) — Execute a short statement before the condition
-6. [If and else](https://go.dev/tour/flowcontrol/7) — Variables from `if` short statements are available in `else` blocks
+1. [For](tour/flowcontrol/01-for.html) — Go's only loop construct; three components separated by semicolons
+2. [For Continued](tour/flowcontrol/02-for-continued.html) — Init and post statements are optional
+3. [For is Go's While](tour/flowcontrol/03-for-is-while.html) — Drop the semicolons for a while-style loop
+4. [If](tour/flowcontrol/05-if.html) — No parentheses around condition, braces are required
+5. [If with Short Statement](tour/flowcontrol/06-if-with-short-statement.html) — Execute a short statement before the condition
+6. [If and Else](tour/flowcontrol/07-if-and-else.html) — Variables from `if` short statements are available in `else` blocks
 
 ## What to Build
 
