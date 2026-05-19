@@ -106,8 +106,6 @@ Began as a PHP developer on the Magento e-commerce platform for Paul Smith's int
 ### Police Community Support Officer
 **West Midlands Police** | June 2008 – April 2013
 
-Worked alongside operational policing teams, gaining direct familiarity with the systems and day-to-day workflows used in law enforcement operations.
-
 ---
 
 > Full employment history available on request
